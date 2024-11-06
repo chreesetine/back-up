@@ -254,18 +254,18 @@ $user_role = $_SESSION['user_role'];
 
                             <div class="form-group">
                                 <label for="form-label">Security Questions</label>
-                                    <select name="quantity" class="form-control">
-                                        <option selected>--Select Question--</option>
-                                        <option value="born">In what province were you born?</option>
-                                        <option value="food">What was your favorite food as a child?</option>
-                                        <option value="year">What year were you born?</option>
-                                        <option value="pet">What is the name of your favorite pet?</option>
+                                    <select name="question" class="form-control">
+                                    <option selected>--Select Question--</option>
+                                        <option value="In what province were you born?">In what province were you born?</option>
+                                        <option value="What was your favorite food as a child?">What was your favorite food as a child?</option>
+                                        <option value="What year were you born?">What year were you born?</option>
+                                        <option value="What is the name of your favorite pet?">What is the name of your favorite pet?</option>
                                     </select>
                             </div>
 
                             <div class="form-group">
                                     <label for="answer">Answer</label>
-                                    <input type="text" class="form-control" id="answer" placeholder="Enter answer" name="answer" autocomplete="answer">
+                                    <input type="text" class="form-control" id="answer" placeholder="Enter answer" name="answer" autocomplete="answer" required>
                             </div>
 
                             <div class="form-group">
@@ -374,7 +374,7 @@ $user_role = $_SESSION['user_role'];
         </div> <!-- main content -->
     </div> <!-- wrapper -->
 </body>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> 

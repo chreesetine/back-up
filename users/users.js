@@ -1,139 +1,10 @@
-/*let btnMenu = document.querySelector('#btnMenu')
-let sidebar = document.querySelector('.sidebar')
+const hamburger = document.querySelector("#toggle-btn");
 
-btnMenu.onclick = function () {
-    sidebar.classList.toggle('active')
-};
-
-
-}); */
-
-
-//for ADD modal and close button elements 
-// ito okay naman kasi 8/6/24 21:55
-/* document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('addUserModal');
-    const closeButton = document.querySelector('.close');
-    const addUserButton = document.getElementById('addUserButton');
-
-    //event listener to add button
-    addUserButton.addEventListener('click', () => {
-        modal.style.display = 'block';
-    });
-
-    //event listener to close button
-    closeButton.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    //event listener to window to close modal when clicked outside
-    window.addEventListener('click', () => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    }); 
-}); */
-
-/*ADD MODAL 
-const addUserModal = document.getElementById('addUserModal');
-const addUserButton = document.getElementById('addUserButton');
-const closeAddUserButton = addUserModal.querySelector('.close');
-
-    addUserButton.addEventListener('click', () => {
-        addUserModal.style.display = 'block';
-    });
-
-    closeAddUserButton.addEventListener('click', () => {
-        addUserModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === addUserModal) {
-            addUserModal.style.display = 'none';
-        }
-}); 
-*/
-
-//for EDIT modal
-// 1ST TRY 8/5/24 21:56
-/* document.addEventListener('DOMContentLoaded', (event) => {
-    const modal = document.getElementById("editModal");
-    const closeModalBtn = document.querySelector(".close-btn");
-    const editForm = document.getElementById("editForm");
-
-    //function
-    function openModal(data) {
-        document.getElementById("editUserId").value = data.id;
-        document.getElementById("editUsername").value = data.username;
-        document.getElementById("editFirstName").value = data.fisrtname;
-        document.getElementById("editLastName").value = data.lastname;
-        document.getElementById("editUserRole").value = data.userrole;
-        modal.style.display = "block";
-    }
-
-    // close
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
-    closeModalBtn.addEventListener('click', closeModal);
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-
-    // event listener for edit button
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const userData = {
-                id: button.getAttribute('data-id'),
-                username: button.getAttrtibute('data-username'),
-                firstname: button.getAttribute('data-firstname'),
-                lastname: button.getAttribute('data-lastname'),
-                userrole: button.getAttribute('data-userrole')
-            };
-            openModal(userData);
-        });
-    });
-
-    // event listener for form submission
-    editForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(editForm);
-        formData.append('user_id', document.getElementById('editUserId').value);
-
-        fetch('edit_user.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('User updated successfully');
-                closeModal();
-            } else {
-                alert ('Error updating user');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-}); */
-
-// Trying new block of code 22:00 8/5/24
-
-
-//merge version in one 'DOMContentLoaded'
-// August 29, 2024 21:27
+hamburger.addEventListener("click", function(){
+    document.querySelector("#sidebar").classList.toggle("expand");
+})
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar toggle functionality
-    const hamburger = document.querySelector("#toggle-btn");
-    hamburger.addEventListener("click", function() {
-        document.querySelector("#sidebar").classList.toggle("expand");
-    });
 
     // Add User Modal functionality
     const addUserModal = document.getElementById('addUserModal');
@@ -160,7 +31,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Edit user modal functionality
+    //add user
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting in the default way
+    
+        const formData = new FormData(this); // Get the form data
+        
+        fetch('add_users.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'User added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    //redirect after showing the success message
+                    window.location.href = 'users.php';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Unexpected error',
+                text: 'Something went wrong!'
+            });
+        });
+    });
+
+    // Edit User Modal functionality
     const editModal = document.getElementById('editModal');
     const closeEditButton = editModal.querySelector('.close-btn');
     const editForm = document.getElementById('editForm');
@@ -183,6 +93,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    //update info
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        const formData = new FormData(this);
+        
+        fetch('update_user.php', { 
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'User Updated!',
+                    text: 'The user details have been successfully updated.',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    window.location.href = 'users.php';
+                });
+            } else {
+                //error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.error || 'There was a problem updating the user.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            //handle error
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try again.',
+            });
+            console.error('Error:', error);
+        });
+    });
+
     closeEditButton.addEventListener('click', () => {
         editModal.style.display = 'none';
     });
@@ -193,31 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handling form submission for the edit modal
-    editForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        // Create a FormData object with form data
-        const formData = new FormData(editForm);
-
-        // Send the form data to the server
-        fetch('update_user.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('User updated successfully');
-                location.reload();
-            } else {
-                alert('Error updating user: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
 
     // Password Validation and Form Submission Handling
     const passwordField = document.getElementById('password');
@@ -437,32 +366,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // for logout
-    const logoutModal = document.getElementById('logoutModal');
-    const closeBtn = logoutModal.querySelector('.close');
-    const noBtn = logoutModal.querySelector('.btn-no');
+    const logoutModal = document.getElementById("logoutModal");
+    const closeBtn = logoutModal.querySelector(".close");
+    const noBtn = logoutModal.querySelector(".btn-no");
 
-   $("#btn_logout").click(function() {
+    $("#btn_logout").click(function(){
         $('#logoutModal').show();
-   });
+    });
 
     // Close the modal when clicking the close button (×)
     if (closeBtn) {
         closeBtn.addEventListener("click", function() {
-            logoutModal.style.display = "none"; 
+            logoutModal.style.display = "none"; // Hide the modal
         });
     }
 
     // Close the modal when clicking the 'No' button
     if (noBtn) {
         noBtn.addEventListener("click", function() {
-            logoutModal.style.display = "none"; 
+            logoutModal.style.display = "none"; // Hide the modal
         });
     }
 
     // Close the modal when clicking outside the modal content
     window.addEventListener("click", function(event) {
         if (event.target === logoutModal) {
-            logoutModal.style.display = "none";
+            logoutModal.style.display = "none"; // Hide the modal
         }
     });
+    
 });
