@@ -1,4 +1,3 @@
-//BURGER MENU
 document.addEventListener('DOMContentLoaded', () => {
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
@@ -61,7 +60,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     closeBtn.onclick = function() {
         login_form.style.display = "none";
     }
-
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -146,13 +144,12 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json()) // Parse the JSON response
+    .then(response => response.json()) 
     .then(data => {
         if (data.success) {
             //redirect on successful login
             window.location.href = '/laundry_system/dashboard/dashboard.php';
         } else {
-            //error message
             Swal.fire({
                 icon: 'error',
                 title: data.title,
@@ -203,7 +200,7 @@ function fetchCategories() {
         .then(data => {
             console.log(data); // Debugging
             let dropdown = document.getElementById('category');
-            dropdown.innerHTML = '<option selected>--Select Category--</option>'; //clear existing options
+            dropdown.innerHTML = '<option selected>--Select Category--</option>'; 
             data.forEach(category => {
                 let option = document.createElement('option');
                 option.value = category.category_id;
@@ -304,7 +301,7 @@ $('#service_option').change(function() {
                 if (selectedOptionText === 'Delivery') {
                     $('#delivery_fee').val(parseFloat(data.price).toFixed(2));  
                 }
-                updateTotalAmount();  // Update total amount after changes
+                updateTotalAmount();  
             } else {
                 console.log('Error:', data.message);
             }
@@ -501,14 +498,14 @@ $(document).ready(function() {
                             swal.fire({
                                 title: "Order added to list!",
                                 text: "You can proceed or add more orders.",
-                                icon: "success"
-                            }).then((result) => {
-                                if (result.isConfirmed) {
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(() => {
                                     // Clear form inputs except customer name and contact number
                                     $('#form_id').find('input[type="text"], input[type="number"], select').not('#customer_name, #contact_number').val('');
                                     $('#service_form').hide();
                                     $('#service_overview').show();
-                                }
                             });
                         }
                     },
@@ -696,8 +693,13 @@ $(document).ready(function() {
                     Swal.fire({
                         title: "Great! Service details saved successfully.",
                         text: response.message,
-                        icon: "success"
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
                     }).then(() => {
+                        //to set a flag to trigger the other page to refresh
+                        localStorage.setItem("refreshOtherPage", "true");
+
                         resetOrder();
                         $('#form_id')[0].reset();
                         $('#form-service input, #form-service select, #form-service textarea').val('');
@@ -916,4 +918,136 @@ $(document).ready(function() {
             }
         });
     });
+
+    /**************FORGOT PASSWORD***************/
+    $('#forgotPasswordModal').on('shown.bs.modal', function () {
+        //remove any existing listeners to prevent duplicates
+        $('#reset_pass_username').off('input');
+        $('#submitForgotPassword').off('click');
+
+        //get the security question when they type their username
+        document.querySelector("#reset_pass_username").addEventListener("input", (e) => {
+            const username = e.target.value.trim();
+            clearTimeout(timeoutId)
+            timeoutId = setTimeout(function(){
+                if (username) {
+                fetchSecurityQuestion(username).then(fetchedQuestion => {
+                    document.querySelector("#question").value = fetchedQuestion || 'No question found';
+                });
+                } else {
+                    document.querySelector("#question").value = '';
+                }
+            }, 1000)
+
+        });
+
+        // Handle the form submission when the submit button is clicked
+        document.querySelector("#submitForgotPassword").addEventListener("click", () => {
+            const username = document.querySelector("#reset_pass_username").value.trim();
+            const answer = document.querySelector("#answer").value.trim();
+
+            console.log("Username: ", username);
+            console.log("Answer: ", answer);
+
+            if (!username) {
+                console.log("No username provided.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Input Required',
+                    text: 'Username is required.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+                return;
+            }
+
+            if (!answer) {
+                console.log("No answer provided.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Input Required',
+                    showConfirmButton: false,
+                    text: 'Answer is required.',
+                    timer: 2000,
+                });
+                return;
+            }
+
+            //send `username` and `answer` to the server
+            fetch('/laundry_system/homepage/forgot_password.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reset_pass_username: username, answer })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
+                    modal.hide();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Answer Verified! ' + data.message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                    }).then(() => {
+                        window.location.href = '/laundry_system/homepage/reset_password.php';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        text: data.message,
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    text: 'An error occurred. Please try again later.',
+                });
+            });
+        });
+    });
+
+    //to retrieve security question
+    function fetchSecurityQuestion(username) {
+        return fetch('/laundry_system/homepage/get_security_question.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                return data.question;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    text: data.message || 'Failed to retrieve security question.',
+                });
+                return '';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching security question:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                timer: 2000,
+                showConfirmButton: false,
+                text: 'An error occurred. Please try again.',
+            });
+            return '';
+        });
+    }
 });

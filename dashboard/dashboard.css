@@ -54,14 +54,14 @@ display: flex;
 width: 100%;
 height: 100vh;
 /* prevent sidebar from expanding beyond viewport */
-overflow: hidden;
+/*overflow: hidden;*/
 }
 
 #sidebar {
 display: flex;
 /* ensure full height */
 height: 100%;
-overflow-y: auto;
+overflow: auto;
 
 width: 70px;
 min-width: 70px;
@@ -510,6 +510,21 @@ transition: margin-left 0.5s ease;
   height: 10px;
   background-color: #ff0707;
   border-radius: 50%;
+}
+
+.day.has-event.past-event::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: blue !important;
+}
+
+.day.has-event.past-event {
+  background-color: #BEDAE3;
 }
 
 .today {

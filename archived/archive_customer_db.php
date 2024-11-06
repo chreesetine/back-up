@@ -1,5 +1,3 @@
-/* NOV 2, 2024 22:26 */
-
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

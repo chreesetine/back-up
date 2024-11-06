@@ -68,13 +68,6 @@ $user_role = $_SESSION['user_role'];
                             <span>Users</span>
                         </a>
                     </li>
-
-                    <!-- <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
-                            <i class='bx bxs-archive-in'></i>
-                            <span class="nav-item">Archived</span>
-                        </a>
-                    </li> -->
                     
                     <li class="sidebar-item">
                         <a href="/laundry_system/records/records.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
@@ -147,6 +140,13 @@ $user_role = $_SESSION['user_role'];
                             </li>
                         </ul>
                     </li>
+
+                    <!-- <li class="sidebar-item">
+                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
+                            <i class='bx bxs-archive-in'></i>
+                            <span class="nav-item">Archived</span>
+                        </a>
+                    </li> -->
                 <?php endif; ?>
             </ul>
 
@@ -314,6 +314,7 @@ $user_role = $_SESSION['user_role'];
                 </div> <!--end of charts-container-->
                 
                 <!--------------CALENDAR------------------->
+                <!--------------CALENDAR------------------->
                 <div class="container">
                     <div class="left">
                         <div class="calendar">
@@ -347,7 +348,7 @@ $user_role = $_SESSION['user_role'];
                             die("Connection failed: " . $conn->connect_error);
                         }
 
-                        $query = "SELECT request_id, laundry_service_option, request_date, service_request_date FROM service_request WHERE order_status = 'completed'";
+                        $query = "SELECT request_id, laundry_service_option, request_date, service_request_date, customer_name FROM service_request WHERE order_status = 'completed'";
                         $result = $conn->query($query);
 
                         if (!$result) {
@@ -359,6 +360,7 @@ $user_role = $_SESSION['user_role'];
                     while ($row = $result->fetch_assoc()) {
                         $events[] = array(
                             'title' => $row['laundry_service_option'],
+                            'customer_name' => $row['customer_name'],
                             'start' => $row['service_request_date'],
                             'end' => $row['request_date'],
                         );
@@ -406,41 +408,50 @@ $user_role = $_SESSION['user_role'];
 
                             date.innerHTML = months[month] + " " + year;
 
+                            //to reset today to midnight for date-only comparisons
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+
                             let days = "";
-                            // Previous
+                            // Prev
                             for (let x = day; x > 0; x--) {
                                 days += `<div class="day prev-date">${prevDays - x + 1}</div>`;
                             }
 
                             for (let i = 1; i <= lastDate; i++) {
-                                //check if event is present on that day
                                 const eventDate = new Date(year, month, i);
                                 const eventsForDay = <?php echo json_encode($events); ?>.filter((event) => {
                                     const eventEnd = new Date(event.end);
-                                    const eventDateTime = new Date(event.end);
-                                    return eventDateTime.getDate() === i && eventDateTime.getMonth() === month && eventDateTime.getFullYear() === year &&  eventEnd >= today;
+                                    return (
+                                        eventEnd.getDate() === i &&
+                                        eventEnd.getMonth() === month &&
+                                        eventEnd.getFullYear() === year
+                                    );
                                 });
 
                                 if (eventsForDay.length > 0) {
-                                    days += `<div class="day has-event mark">${i}</div>`; //add the mark
+                                    if (eventDate < today) {
+                                        console.log(`Applying past-event to day ${i}`);
+                                        days += `<div class="day has-event past-event mark">${i}</div>`;
+                                    } else {
+                                        days += `<div class="day has-event mark">${i}</div>`;
+                                    }
                                 } else if (
-                                    i === new Date().getDate() &&
-                                    year === new Date().getFullYear() &&
-                                    month === new Date().getMonth()
+                                    i === today.getDate() &&
+                                    year === today.getFullYear() &&
+                                    month === today.getMonth()
                                 ) {
-                                    days += `<div class="day today">${i}</div>`; //highlights today's date
+                                    days += `<div class="day today">${i}</div>`;
                                 } else {
-                                    days += `<div class="day">${i}</div>`; //regular day
+                                    days += `<div class="day">${i}</div>`;
                                 }
                             }
 
-                            for (let j = 1; j < nextDays; j++) {
+                            for (let j = 1; j <= nextDays; j++) {
                                 days += `<div class="day next-date">${j}</div>`;
                             }
-                            
+                        
                             daysContainer.innerHTML = days;
-
-                            
                         }
 
                         initCalendar();
@@ -474,14 +485,17 @@ $user_role = $_SESSION['user_role'];
                                 const eventDate = new Date(event.end);
                                 if (eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth() && eventDate.getFullYear() === date.getFullYear()) {
                                     eventList += `
+                                        <hr style="border: 1px solid #b8c1ec;"> 
                                         <div class="event">
-                                        <h4><li>${event.title}</li></h4>
-                                        <span>Start: ${event.start}</span>
-                                        <span>End: ${event.end}</span>
+                                            <h4><li>${event.title}</li></h4>
+                                            <span>Customer name: ${event.customer_name}</span>
+                                            <span>Start: ${event.start}</span>
+                                            <span>End: ${event.end}</span>
                                         </div>
-                                        <hr style="border: 1px solid #b8c1ec; margin: 5px 0;"> 
+                                       
+                                        
                                     `;
-                                }
+                                } // <hr style="border: 1px solid #b8c1ec; margin: 1rem;"> 
                             });
 
                             eventsContainer.innerHTML = eventList;
