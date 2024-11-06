@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            // Send user ID as JSON
             body: JSON.stringify({ id: customerIdToArchive })  
         })
 
