@@ -84,8 +84,8 @@ $conn->close();
                             <img src="/laundry_system/images/laundry_logo.png" alt="logo">      
                         </header>
                         <button type="button" class="btnClose" onclick="closeForm()"><i class='bx bx-x bx-rotate-90'></i></button>
-                        <h4>Login</h3>
-                        <h5>Welcome back!</h5>
+                        <h4>Login</h4>
+                        <h6>Welcome back!</h6>
                     </div>
 
                     <form id="loginForm">
@@ -159,13 +159,19 @@ $conn->close();
                 <div class="row">
                     <h5 class="text-center">Customer Details</h5>
                     <div class="col">
-                        <label for="form-label"><b>Customer Name</b></label>
+                        <label for="customerName" class="form-label">
+                            <b>Customer Name</b>
+                            <span class="info-icon" data-tooltip="Provide first and last name">i</span>
+                        </label>
                         <input type="text" class="form-control" id="customer_name" name="customer_name"
                             placeholder="Enter customer name" autocomplete="off">
                     </div>
 
                     <div class="col">
-                        <label for="form-label"><b>Contact Number</b></label>
+                        <label for="contactNo" class="form-label">
+                            <b>Contact Number</b>
+                            <span class="info-icon" data-tooltip="Please use active phone number">i</span>
+                        </label>
                         <input type="tel" class="form-control" id="contact_number" name="contact_number"
                             placeholder="Enter customer number" autocomplete="off"  maxlength="11" oninput="validateContactNumber(this)">
                     </div>
