@@ -1,4 +1,5 @@
 <?php
+include 'connect.php';
 session_start();
 require_once('category_db.php');
 
@@ -69,7 +70,7 @@ if ($_SESSION['user_role'] !== 'admin') {
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/records/customer.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
                             <span>Records</span>
@@ -116,10 +117,29 @@ if ($_SESSION['user_role'] !== 'admin') {
                     <hr style="border: 1px solid #b8c1ec; margin: 8px">
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        data-bs-target="#archived" aria-expanded="false" aria-controls="archived">
                             <i class='bx bxs-archive-in'></i>
-                            <span class="nav-item">Archived</span>
+                            <span>Archived</span>
                         </a>
+
+                        <ul id="archived" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">Archived Users</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_customer.php" class="sidebar-link">Archived Customer</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_service.php" class="sidebar-link">Archived Service</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_category.php" class="sidebar-link">Archived Category</a>
+                            </li>
+                        </ul>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -205,6 +225,7 @@ if ($_SESSION['user_role'] !== 'admin') {
             </div>
 
             <div class="modal" id="addModal" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1>Add Category</h1>
@@ -215,15 +236,17 @@ if ($_SESSION['user_role'] !== 'admin') {
                         <form method="POST" action="add_category.php" id="form">
                             <div class="form-group">
                                 <h3>Laundry Category</h3>
-                                <input type="text" class="form-control" placeholder="Create laundry category option" name="laundry_category_option" required>
+                                <input type="text" class="form-control" style="width:110%;" placeholder="Create laundry category option" name="laundry_category_option" required>
                             </div>
 
                             <button type="submit" class="btn btn-success">Submit</button>
                             <button type="button" class="btn btn-info">Clear</button>
                         </form>
                     </div>
-                </div> <!-- modal-content closing tag -->
-            </div> <!-- modal closing tag -->
+                </div><!-- modal-dialog closing tag -->
+            </div> <!-- modal-content closing tag -->
+            
+        </div> <!-- modal closing tag -->
 
             <div class="Archvmodal" id="archiveModal">
                 <div class="modal-cnt">
