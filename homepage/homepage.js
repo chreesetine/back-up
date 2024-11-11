@@ -19,9 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const btnLogin = document.getElementById('form_open');
+    //button ito sa may service request
     const btnLaundryService = document.getElementById('openService');
     const login_form = document.getElementById('form_container');
+    //button ito sa may FORM mismo
     const laundry_service_form = document.getElementById('service_form');
+    //button para sa login submit button
+    const loginSubmitButton = document.getElementById('form_container'); // Add your login button id??
 
     //open the login form
     btnLogin.onclick = function() {
@@ -34,7 +38,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             laundry_service_form.style.display = 'block';
             login_form.style.display = 'none';
     });
-
 });
 
 //scrolling effect
@@ -1050,4 +1053,22 @@ $(document).ready(function() {
             return '';
         });
     }
+
+    // Barangay names
+    const brgys = [
+        "Ciudad Real", "Dulong Bayan", "Francisco Homes - Guijo", "Francisco Homes - Mulawin", "Francisco Homes - Narra", 
+        "Francisco Homes - Yakal", "Gaya-gaya", "Graceville", "Gumaoc East", "Gumaoc Central", "Gumaoc West", "Kaybanban", 
+        "Kaypian", "Maharlika", "Muzon South", "Muzon Proper", "Muzon East", "Muzon West", "Paradise 3", "Poblacion", 
+        "Poblacion 1", "San Isidro", "San Manuel", "San Roque", "Sto. Cristo", "Tungkong Mangga"
+    ];
+
+    const barangaySelect = document.getElementById("barangaySelect");
+
+    brgys.forEach(brgy => {
+        const option = document.createElement("option");
+        option.value = brgy;       
+        option.textContent = brgy;    
+        barangaySelect.appendChild(option);  
+    });
+
 });
