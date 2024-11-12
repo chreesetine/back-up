@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2024 at 08:23 AM
+-- Generation Time: Nov 12, 2024 at 11:30 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -101,7 +101,8 @@ CREATE TABLE `archived_service` (
 
 INSERT INTO `archived_service` (`archive_id`, `service_id`, `laundry_service_option`, `archived_at`) VALUES
 (1, 5, 'Dry only', '2024-09-16 17:24:16'),
-(2, 4, 'Wash only', '2024-09-18 10:47:12');
+(2, 4, 'Wash only', '2024-09-18 10:47:12'),
+(3, 7, 'Shoe clean', '2024-11-12 07:27:59');
 
 -- --------------------------------------------------------
 
@@ -213,7 +214,11 @@ INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_number`, `provi
 (72, 'Mingming', '35464765874', '', '', '', ''),
 (73, 'Tintin Magbanua', '09404304930', '', '', 'Citiville', ''),
 (74, 'Melanie ', '09876578909', '', '', 'Heaven subd', ''),
-(75, 'hello', '98765667890', '', '', 'sarmiento', '');
+(75, 'hello', '98765667890', '', '', 'sarmiento', ''),
+(76, 'Danielle', '09997657897', '', '', '', ''),
+(77, 'Dani DC', '09567890876', '', '', 'Orange', ''),
+(78, 'Mung Go', '09534534643', '', '', '', ''),
+(79, 'juju beat', '09173627362', '', '', 'verde green 888', '');
 
 -- --------------------------------------------------------
 
@@ -234,8 +239,7 @@ INSERT INTO `service` (`service_id`, `laundry_service_option`) VALUES
 (1, 'Wash/Dry/Fold'),
 (2, 'Wash/Dry/Press'),
 (3, 'Dry only'),
-(6, 'Wash only'),
-(7, 'Shoe clean');
+(6, 'Wash only');
 
 -- --------------------------------------------------------
 
@@ -303,7 +307,8 @@ CREATE TABLE `service_option_price` (
 
 INSERT INTO `service_option_price` (`option_price_id`, `option_id`, `service_option_type`, `price`) VALUES
 (1, 1, 'Delivery', '50.00'),
-(3, 3, 'Rush', '50.00');
+(3, 3, 'Rush', '50.00'),
+(4, 4, 'Delivery gg', '25.00');
 
 -- --------------------------------------------------------
 
@@ -398,7 +403,10 @@ INSERT INTO `service_request` (`request_id`, `customer_id`, `customer_order_id`,
 (64, 58, 'ord_6731c1e246296', 'Mingming', '35464765874', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 10, '8.00', '80.00', '0000-00-00', '2024-11-11', '16:35:46', 'active'),
 (65, 73, 'ord_67321ccaec306', 'Tintin Magbanua', '09404304930', 3, 'Dry only', 1, 'Clothes/Table Napkins/Pillowcase', 4, '5.00', '35.00', '2024-11-14', '2024-11-11', '23:03:38', 'completed'),
 (66, 74, 'ord_67322c125dc2a', 'Melanie ', '09876578909', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '8.00', '35.00', '2024-11-12', '2024-11-12', '00:08:50', 'completed'),
-(67, 75, 'ord_6732ea827f837', 'hello', '98765667890', 0, '--Select Service--', 1, 'Clothes/Table Napkins/Pillowcase', 8, '8.00', '35.00', '2024-11-13', '2024-11-12', '13:41:22', 'completed');
+(67, 75, 'ord_6732ea827f837', 'hello', '98765667890', 0, '--Select Service--', 1, 'Clothes/Table Napkins/Pillowcase', 8, '8.00', '35.00', '2024-11-13', '2024-11-12', '13:41:22', 'completed'),
+(68, 77, 'ord_6733172f30393', 'Dani DC', '09567890876', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '8.00', '45.00', '2024-11-15', '2024-11-12', '16:51:59', 'completed'),
+(69, 78, 'ord_67331cbc7ec9f', 'Mung Go', '09534534643', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 7, '8.00', '100.00', '0000-00-00', '2024-11-12', '17:15:40', 'cancelled'),
+(70, 79, 'ord_6733282bdee4a', 'juju beat', '09173627362', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 1, '8.00', '45.00', '2024-11-15', '2024-11-12', '18:04:27', 'completed');
 
 -- --------------------------------------------------------
 
@@ -438,7 +446,7 @@ CREATE TABLE `transaction` (
   `brgy` varchar(255) NOT NULL,
   `service_option_id` int(100) NOT NULL,
   `service_option_name` varchar(50) NOT NULL,
-  `laundry_cycle` enum('standard','rush') NOT NULL,
+  `laundry_cycle` enum('Standard','Rush') NOT NULL,
   `total_amount` decimal(65,2) DEFAULT NULL,
   `delivery_fee` decimal(65,2) DEFAULT NULL,
   `rush_fee` decimal(65,2) DEFAULT NULL,
@@ -451,45 +459,47 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`transaction_id`, `request_id`, `customer_id`, `customer_name`, `province`, `city`, `customer_address`, `brgy`, `service_option_id`, `service_option_name`, `laundry_cycle`, `total_amount`, `delivery_fee`, `rush_fee`, `amount_tendered`, `money_change`) VALUES
-(5, 9, 24, 'christine', '', '', '', '', 1, 'Delivery', 'rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
-(6, 10, 24, 'christine', '', '', '', '', 1, 'Delivery', 'rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
-(7, 11, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
-(8, 12, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
-(9, 13, 26, 'winnie', '', '', '', '', 1, 'Delivery', 'rush', '405.00', '50.00', '25.00', '420.00', '15.00'),
-(10, 14, 27, 'milky', '', '', '', '', 1, 'Delivery', 'standard', '650.00', '50.00', '0.00', '700.00', '50.00'),
-(11, 18, 29, 'denise', '', '', '', '', 1, 'Delivery', 'rush', '350.00', '50.00', '25.00', '500.00', '150.00'),
-(12, 21, 31, 'nitinit', '', '', '', '', 1, 'Delivery', 'rush', '405.00', '50.00', '25.00', '500.00', '95.00'),
-(13, 22, 18, 'roi', '', '', '', '', 1, 'Delivery', 'standard', '750.00', '50.00', '0.00', '800.00', '50.00'),
-(14, 24, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
-(15, 25, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
-(16, 26, 24, 'christine', '', '', 'laguna', '', 1, 'Delivery', 'rush', '775.00', '50.00', '25.00', '800.00', '25.00'),
-(17, 27, 36, 'Christinee', '', '', 'SJDM', '', 1, 'Delivery', 'rush', '595.00', '50.00', '25.00', '600.00', '5.00'),
-(18, 29, 41, 'Liam ', '', '', 'Argentina', '', 1, 'Delivery', 'rush', '625.00', '50.00', '25.00', '700.00', '75.00'),
-(19, 30, 42, 'Kristine', '', '', 'Isabela', '', 2, 'Customer Pick-Up', 'standard', '350.00', '0.00', '0.00', '500.00', '150.00'),
-(20, 31, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(21, 32, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(22, 33, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(23, 34, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
-(24, 35, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
-(25, 36, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
-(26, 37, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
-(27, 38, 49, 'Gwen', '', '', 'sjdm', '', 1, 'Delivery', 'rush', '675.00', '50.00', '25.00', '700.00', '25.00'),
-(28, 41, 52, 'Pink Sweat', '', '', 'Cypress', '', 2, 'Customer Pick-Up', 'rush', '380.00', '0.00', '50.00', '400.00', '20.00'),
-(29, 42, 53, 'adi', '', '', '', '', 2, 'Customer Pick-Up', 'standard', '175.00', '0.00', '0.00', '500.00', '325.00'),
-(30, 43, 54, 'tobi', '', '', 'verde green', '', 1, 'Delivery', 'rush', '485.00', '50.00', '50.00', '500.00', '15.00'),
-(31, 44, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
-(32, 45, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
-(33, 46, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
-(34, 47, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
-(35, 50, 59, 'milky', '', '', 'blk 2 lot 16', '', 1, 'Delivery', 'standard', '690.00', '50.00', '0.00', '1000.00', '310.00'),
-(36, 52, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
-(37, 53, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
-(38, 54, 64, 'Charlize', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'standard', '530.00', '50.00', '0.00', '600.00', '70.00'),
-(39, 57, 66, 'Pearl Magbanua', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'standard', '450.00', '50.00', '0.00', '500.00', '50.00'),
-(40, 59, 68, 'den', '', '', '', '', 2, 'Customer Pick-Up', 'rush', '320.00', '0.00', '50.00', '500.00', '180.00'),
-(41, 65, 73, 'Tintin Magbanua', '', '', 'Citiville', '', 1, 'Delivery', 'standard', '225.00', '50.00', '0.00', '1000.00', '775.00'),
-(42, 66, 74, 'Melanie ', '', '', 'Heaven subd', '', 1, 'Delivery', 'rush', '380.00', '50.00', '50.00', '500.00', '120.00'),
-(43, 67, 75, 'hello', '', '', 'sarmiento', '', 0, '--Select Option--', 'rush', '330.00', '0.00', '50.00', '500.00', '170.00');
+(5, 9, 24, 'christine', '', '', '', '', 1, 'Delivery', 'Rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
+(6, 10, 24, 'christine', '', '', '', '', 1, 'Delivery', 'Rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
+(7, 11, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'Rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
+(8, 12, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'Rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
+(9, 13, 26, 'winnie', '', '', '', '', 1, 'Delivery', 'Rush', '405.00', '50.00', '25.00', '420.00', '15.00'),
+(10, 14, 27, 'milky', '', '', '', '', 1, 'Delivery', 'Standard', '650.00', '50.00', '0.00', '700.00', '50.00'),
+(11, 18, 29, 'denise', '', '', '', '', 1, 'Delivery', 'Rush', '350.00', '50.00', '25.00', '500.00', '150.00'),
+(12, 21, 31, 'nitinit', '', '', '', '', 1, 'Delivery', 'Rush', '405.00', '50.00', '25.00', '500.00', '95.00'),
+(13, 22, 18, 'roi', '', '', '', '', 1, 'Delivery', 'Standard', '750.00', '50.00', '0.00', '800.00', '50.00'),
+(14, 24, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
+(15, 25, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
+(16, 26, 24, 'christine', '', '', 'laguna', '', 1, 'Delivery', 'Rush', '775.00', '50.00', '25.00', '800.00', '25.00'),
+(17, 27, 36, 'Christinee', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '595.00', '50.00', '25.00', '600.00', '5.00'),
+(18, 29, 41, 'Liam ', '', '', 'Argentina', '', 1, 'Delivery', 'Rush', '625.00', '50.00', '25.00', '700.00', '75.00'),
+(19, 30, 42, 'Kristine', '', '', 'Isabela', '', 2, 'Customer Pick-Up', 'Standard', '350.00', '0.00', '0.00', '500.00', '150.00'),
+(20, 31, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(21, 32, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(22, 33, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(23, 34, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'Rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
+(24, 35, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'Rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
+(25, 36, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
+(26, 37, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
+(27, 38, 49, 'Gwen', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '675.00', '50.00', '25.00', '700.00', '25.00'),
+(28, 41, 52, 'Pink Sweat', '', '', 'Cypress', '', 2, 'Customer Pick-Up', 'Rush', '380.00', '0.00', '50.00', '400.00', '20.00'),
+(29, 42, 53, 'adi', '', '', '', '', 2, 'Customer Pick-Up', 'Standard', '175.00', '0.00', '0.00', '500.00', '325.00'),
+(30, 43, 54, 'tobi', '', '', 'verde green', '', 1, 'Delivery', 'Rush', '485.00', '50.00', '50.00', '500.00', '15.00'),
+(31, 44, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
+(32, 45, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
+(33, 46, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
+(34, 47, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
+(35, 50, 59, 'milky', '', '', 'blk 2 lot 16', '', 1, 'Delivery', 'Standard', '690.00', '50.00', '0.00', '1000.00', '310.00'),
+(36, 52, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'Standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
+(37, 53, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'Standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
+(38, 54, 64, 'Charlize', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'Standard', '530.00', '50.00', '0.00', '600.00', '70.00'),
+(39, 57, 66, 'Pearl Magbanua', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'Standard', '450.00', '50.00', '0.00', '500.00', '50.00'),
+(40, 59, 68, 'den', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '320.00', '0.00', '50.00', '500.00', '180.00'),
+(41, 65, 73, 'Tintin Magbanua', '', '', 'Citiville', '', 1, 'Delivery', 'Standard', '225.00', '50.00', '0.00', '1000.00', '775.00'),
+(42, 66, 74, 'Melanie ', '', '', 'Heaven subd', '', 1, 'Delivery', 'Rush', '380.00', '50.00', '50.00', '500.00', '120.00'),
+(43, 67, 75, 'hello', '', '', 'sarmiento', '', 0, '--Select Option--', 'Rush', '330.00', '0.00', '50.00', '500.00', '170.00'),
+(44, 68, 77, 'Dani DC', '', '', 'Orange', '', 2, 'Customer Pick-Up', 'Standard', '360.00', '0.00', '0.00', '500.00', '140.00'),
+(45, 70, 79, 'juju beat', '', '', 'verde green 888', '', 1, 'Delivery', 'Standard', '410.00', '50.00', '0.00', '500.00', '90.00');
 
 -- --------------------------------------------------------
 
@@ -664,7 +674,7 @@ ALTER TABLE `archived_customers`
 -- AUTO_INCREMENT for table `archived_service`
 --
 ALTER TABLE `archived_service`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `archived_users`
@@ -682,7 +692,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `service`
@@ -706,13 +716,13 @@ ALTER TABLE `service_options`
 -- AUTO_INCREMENT for table `service_option_price`
 --
 ALTER TABLE `service_option_price`
-  MODIFY `option_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `option_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `service_request`
 --
 ALTER TABLE `service_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -724,7 +734,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `user`
