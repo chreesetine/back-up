@@ -521,28 +521,10 @@ $('#service_option').change(function() {
     if (selectedOptionText === 'Customer Pick-Up') {
         $('#delivery_fee').val('');  
         updateTotalAmount(); 
-    } else if (serviceOptionId) {
-        $.ajax({
-            type: 'GET',
-            url: '/laundry_system/homepage/getServiceOptionRate.php',
-            data: { option_id: serviceOptionId },
-            dataType: 'json'
-        })
-        .done(function(data) {
-            console.log('Received data:', data);
-            if (data.error === 0) {
-                console.log('Setting price to:', data.price);
-                if (selectedOptionText === 'Delivery') {
-                    $('#delivery_fee').val(parseFloat(data.price).toFixed(2));  
-                }
-                updateTotalAmount();  
-            } else {
-                console.log('Error:', data.message);
-            }
-        })
-        .fail(function(xhr, status, error) {
-            console.log('Ajax error:', error);
-        });
+     }
+     else if (selectedOptionText === 'Delivery') {
+        $('#delivery_fee').val(''); 
+        updateTotalAmount();
     } else {
         $('#delivery_fee').val(''); 
         updateTotalAmount();
@@ -1294,12 +1276,53 @@ $(document).ready(function() {
     ];
 
     const barangaySelect = document.getElementById("barangaySelect");
+    const deliveryFeeInput = document.getElementById("delivery_fee");
 
     brgys.forEach(brgy => {
         const option = document.createElement("option");
         option.value = brgy;       
         option.textContent = brgy;    
         barangaySelect.appendChild(option);  
+    });
+
+    function fetchDeliveryFee(serviceOptionId) {
+        $.ajax({
+            type: 'GET',
+            url: '/laundry_system/homepage/getServiceOptionRate.php',
+            data: { option_id: serviceOptionId },
+            dataType: 'json'
+        })
+        .done(function(data) {
+            if (data.error === 0) {
+                deliveryFeeInput.value = parseFloat(data.price).toFixed(2);
+                updateTotalAmount();
+            } else {
+                console.log('Error:', data.message);
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log('Ajax error:', error);
+        });
+    }
+    
+    $('#barangaySelect').change(function() {
+        const selectedBarangay = $(this).find('option:selected').text();
+    
+        // Set delivery fee based on barangay selection dynamically
+        const deliveryServiceOptionId = (selectedBarangay === "Gaya-gaya") ? 4 : 1; // ID "Gaya-gaya" || other barangays
+        fetchDeliveryFee(deliveryServiceOptionId);
+    });
+    
+    // Event listener for service selection
+    serviceOptionSelect.change(function() {
+        const selectedOptionText = $(this).find('option:selected').text();
+    
+        if (selectedOptionText === 'Delivery') {
+            deliveryFeeInput.value = "";
+        } else {
+            // Trigger the barangay selection change to apply the correct delivery fee on charge section
+            $('#barangaySelect').trigger('change');
+        }
     });
 
 });
