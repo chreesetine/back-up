@@ -107,9 +107,9 @@ $conn->close();
                             <span><a href="#" id="forgotPass" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password? </a></span>
                         </div>
 
-                            <div class="input-box">
-                                <input type="submit" class="btn" value="Login">
-                            </div>
+                        <div class="input-box">
+                            <input type="submit" class="btn" value="Login">
+                        </div>
                     </form>
                 </div>
         </div>

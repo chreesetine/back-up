@@ -17,28 +17,167 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// integration shit 
 document.addEventListener('DOMContentLoaded', (event) => {
     const btnLogin = document.getElementById('form_open');
-    //button ito sa may service request
     const btnLaundryService = document.getElementById('openService');
     const login_form = document.getElementById('form_container');
-    //button ito sa may FORM mismo
     const laundry_service_form = document.getElementById('service_form');
-    //button para sa login submit button
-    const loginSubmitButton = document.getElementById('form_container'); // Add your login button id??
+    const closeBtn = document.getElementsByClassName("btnClose")[0];
 
-    //open the login form
+    // Flag to track if the user is logged in
+    let isLoggedIn = false;
+
+    // Open the login form
     btnLogin.onclick = function() {
         login_form.style.display = 'block';
         laundry_service_form.style.display = 'none';
     }
 
-    //open the service request
+    // Close the login form
+    closeBtn.onclick = function() {
+        login_form.style.display = "none";
+    }
+
+    // Handle the service request button when clicked
     btnLaundryService.addEventListener('click', () => {
-            laundry_service_form.style.display = 'block';
-            login_form.style.display = 'none';
+        // Check if the user is logged in
+        if (isLoggedIn) {
+            // Directly show the service request form
+            laundry_service_form.style.display = "block";
+            login_form.style.display = "none";
+        } else {
+            // If not logged in, show the warning and then the choice
+            laundry_service_form.style.display = 'none';
+
+            Swal.fire({
+                title: "Authorized users only have access to the service request.",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 3000,
+            }).then(() => {
+                Swal.fire({
+                    title: "Where do you want to proceed?",
+                    showCancelButton: true,
+                    confirmButtonText: "Service Request",
+                    cancelButtonText: "Login",
+                    confirmButtonColor: "#3085d6",  // Blue button for Service Request
+                    cancelButtonColor: "#F4C430"    // Yellow button for Login
+                }).then((choice) => {
+                    if (choice.isConfirmed) {
+                        // If "Service Request" is clicked, show the service request form
+                        laundry_service_form.style.display = "block";
+                        login_form.style.display = "none";
+                    } else {
+                        // If "Login" is clicked, show the login form
+                        login_form.style.display = "block";
+                        laundry_service_form.style.display = "none";
+                    }
+                });
+            });
+        }
+    });
+
+    // Handle login form submission
+    login_form.addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the form from submitting the traditional way
+
+        if (login_form) {
+        const formData = new FormData(loginForm); // Create FormData from the correct form
+
+            fetch('login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // isLoggedIn = true;
+
+                    Swal.fire({
+                        title: "You have successfully logged in.",
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '/laundry_system/dashboard/dashboard.php';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Login failed",
+                        text: "Invalid username or password.",
+                        timer: 3000
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Error',
+                    text: 'An error occurred during login. Please try again.'
+                });
+            });
+        } else {
+            console.error('Login form not found');
+        }
     });
 });
+
+
+/* ORIGINAL CODE NI NITNISE  */
+// document.addEventListener('DOMContentLoaded', (event) => {
+//     const btnLogin = document.getElementById('form_open');
+//     //button ito sa may service request
+//     const btnLaundryService = document.getElementById('openService');
+
+//     //para mabuksan yung form ng logi
+//     const login_form = document.getElementById('form_container');
+//     //button ito sa may FORM mismo
+//     const laundry_service_form = document.getElementById('service_form');
+
+//     // Flag to track if the user is logged in
+//    // let isLoggedIn = false;
+
+//     //open the login form
+//     btnLogin.onclick = function() {
+//         login_form.style.display = 'block';
+//         laundry_service_form.style.display = 'none';
+//     }
+
+//     // handle the service request button when clicked
+//     btnLaundryService.addEventListener('click', () => {
+//         laundry_service_form.style.display = 'none';
+
+//         Swal.fire({
+//                 title: "Authorized users only have access to the service request.",
+//                 icon: "warning",
+//                 showConfirmButton: false,
+//                 timer: 3000,
+//         }).then(() => {
+//             //laundry_service_form.style.display = 'none';
+//             Swal.fire({
+//                 title: "Where do you want to proceed?",
+//                 showCancelButton: true,
+//                 confirmButtonText: "Service Request",
+//                 cancelButtonText: "Login",
+//                 confirmButtonColor: "#3085d6",  // Blue button for Service Request
+//                 cancelButtonColor: "#F4C430"    // Yellow button for Login
+//             }).then((choice) => {
+//                 if (choice.isConfirmed) {
+//                 // If "Service Request" is clicked, show the service request form
+//                     laundry_service_form.style.display = "block";
+//                     login_form.style.display = "none";
+//                 } else {
+//                 // If "Login" is clicked, show the login form
+//                     login_form.style.display = "block";
+//                     laundry_service_form.style.display = "none";
+//                 }
+//             });
+//         });
+//     });
+// }); 
 
 //scrolling effect
 window.addEventListener('scroll', () => {
@@ -47,23 +186,82 @@ window.addEventListener('scroll', () => {
     document.body.style.setProperty('--scale', scaleValue);
 }, false);
 
+/*original code ni denise at tin*/
+//POP-UP LOGIN FORM 
+// document.addEventListener('DOMContentLoaded', (event) => {
+//     const login_form = document.getElementById("form_container");
+//     const openLogin = document.getElementById("form_open");
+//     const closeBtn = document.getElementsByClassName("btnClose")[0];
+//     //const service_form = document.getElementById('service_form'); // Added this assuming `service_form` exists
 
-//POP-UP LOGIN FORM
-document.addEventListener('DOMContentLoaded', (event) => {
-    const login_form = document.getElementById("form_container");
-    const openLogin = document.getElementById("form_open");
-    const closeBtn = document.getElementsByClassName("btnClose")[0];
+//     //open the login form
+//     openLogin.onclick = function() {
+//         login_form.style.display = "block";
+//         //dagdag ko lang
+//         service_form.style.display = 'none';
+//     }
 
-    //open the service form
-    openLogin.onclick = function() {
-        login_form.style.display = "block";
-    }
+//     //close the login form
+//     closeBtn.onclick = function() {
+//         login_form.style.display = "none";
+//     }
 
-    //close the service form
-    closeBtn.onclick = function() {
-        login_form.style.display = "none";
-    }
-});
+//     // Show SweetAlert and open login form when Service Request button is clicked
+//     /*openService.addEventListener('click', () => {
+//         Swal.fire({
+//             title: "Authorized users only have access to the service request.",
+//             icon: "warning",
+//             showConfirmButton: false,
+//             timer: 3500,
+//         }).then(() => {
+//             login_form.style.display = "block";
+//             service_form.style.display = 'none';
+//         });
+//     });  */
+
+//     // Handle login form submission
+//     login_form.addEventListener('submit', function (e) {
+//         e.preventDefault(); // Prevent the form from submitting the traditional way
+
+//         const formData = new FormData(login_form);
+
+//         fetch('login.php', {
+//             method: 'POST',
+//             body: formData
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 // Show success message without triggering the "Where do you want to proceed?" SweetAlert
+//                 Swal.fire({
+//                     title: "You have successfully logged in.",
+//                     icon: "success",
+//                     timer: 2000,
+//                     showConfirmButton: false
+//                 }).then(() => {
+//                     // Redirect or open the dashboard after successful login
+//                     window.location.href = '/laundry_system/dashboard/dashboard.php';
+//                 });
+//             } else {
+//                 // Show error message if credentials are incorrect
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: "Login failed",
+//                     text: "Invalid username or password.",
+//                     timer: 3000
+//                 });
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Login Error',
+//                 text: 'An error occurred during login. Please try again.'
+//             });
+//         });
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const service_form = document.getElementById("service_form");
@@ -129,12 +327,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function validateContactNumber(input) {
-    const regex = /^[0-9]{11}$/;
-    if (!regex.test(input.value)) {
-        input.setCustomValidity("Please enter a 11-digit number");
-    } else {
-        input.setCustomValidity("");
-    }
+        const regex = /^09[0-9]{9}$/; 
+        if (!regex.test(input.value)) {
+            if (!input.value.startsWith("09")) {
+                input.setCustomValidity("Use 09 as number format");
+            } else {
+                input.setCustomValidity("Please enter an 11-digit number");
+            }
+        } else {
+            input.setCustomValidity("");
+        }
 }
 
 /*********************LOGIN FORM************************/
@@ -150,18 +352,43 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     .then(response => response.json()) 
     .then(data => {
         if (data.success) {
-            //redirect on successful login
-            window.location.href = '/laundry_system/dashboard/dashboard.php';
+            // Display the "Where do you want to proceed?" SweetAlert on successful login
+            Swal.fire({
+                title: "Where do you want to proceed?",
+                showCancelButton: true,
+                confirmButtonText: "Service Request",
+                cancelButtonText: "Login",
+                confirmButtonColor: "#3085d6",  // Blue button
+                cancelButtonColor: "#F4C430"       // Yellow button
+            }).then((choice) => {
+                if (choice.isConfirmed) {
+                    // If "Service Request" is clicked, show the service request form
+                    document.getElementById("service_form").style.display = "block";
+                    document.getElementById("form_container").style.display = "none";
+                } else {
+                    // If "Login" is clicked, redirect to the dashboard
+                    Swal.fire("You have successfully succeeded.", "", "success").then(() => {
+                        window.location.href = '/laundry_system/dashboard/dashboard.php';
+                    });
+                }
+            });
         } else {
+            // Show error message if credentials are incorrect
             Swal.fire({
                 icon: 'error',
-                title: data.title,
-                text: data.message,
+                title: data.title || "Login failed", 
+                text: data.message || "Invalid username or password.",
+                timer: 3000
             });
         }
     })
     .catch(error => {
         console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Error',
+            text: 'An error occured during login. Please try again.'
+        });
     });
 });
 
@@ -179,7 +406,9 @@ function fetchServices() {
         .then(data => {
             console.log(data); // Debugging
             let dropdown = document.getElementById('service');
-            dropdown.innerHTML = '<option selected>--Select Service--</option>'; // Clear existing options
+            dropdown.innerHTML = '<option selected disabled>--Select Service--</option>'; // Clear existing options
+
+            // Populate
             data.forEach(service => {
                 let option = document.createElement('option');
                 option.value = service.service_id;
@@ -203,7 +432,9 @@ function fetchCategories() {
         .then(data => {
             console.log(data); // Debugging
             let dropdown = document.getElementById('category');
-            dropdown.innerHTML = '<option selected>--Select Category--</option>'; 
+
+            // Populate
+            dropdown.innerHTML = '<option selected disabled>--Select Category--</option>'; 
             data.forEach(category => {
                 let option = document.createElement('option');
                 option.value = category.category_id;
@@ -771,7 +1002,7 @@ $(document).ready(function() {
         });
     })
 
-    function printInvoice() {
+    /*function printInvoice() {
         var printButton = document.getElementById('print_invoice_btn');
         printButton.style.display = 'none';
         
@@ -845,7 +1076,7 @@ $(document).ready(function() {
     }
     
     
-    $('#print_invoice_btn').click(printInvoice);
+    $('#print_invoice_btn').click(printInvoice); */
     
     $('#btnCancel_service_details').click(function() {
         swal.fire({
@@ -896,7 +1127,7 @@ $(document).ready(function() {
                 });
             }
         });
-    });
+    }); 
 
     //Cancel service request button click on overview page
     $('#btnCancel_service').click(function() {
