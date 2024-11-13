@@ -17,167 +17,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// integration shit 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const login_form = document.getElementById("form_container");
+    const closeBtn = document.getElementsByClassName("btnClose")[0];
+
+    //close the service form
+    closeBtn.onclick = function() {
+        login_form.style.display = "none";
+    }
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const btnLogin = document.getElementById('form_open');
     const btnLaundryService = document.getElementById('openService');
     const login_form = document.getElementById('form_container');
     const laundry_service_form = document.getElementById('service_form');
-    const closeBtn = document.getElementsByClassName("btnClose")[0];
 
-    // Flag to track if the user is logged in
-    let isLoggedIn = false;
-
-    // Open the login form
+    //open the login form
     btnLogin.onclick = function() {
         login_form.style.display = 'block';
         laundry_service_form.style.display = 'none';
     }
 
-    // Close the login form
-    closeBtn.onclick = function() {
-        login_form.style.display = "none";
-    }
-
-    // Handle the service request button when clicked
+    //open the service request
     btnLaundryService.addEventListener('click', () => {
-        // Check if the user is logged in
-        if (isLoggedIn) {
-            // Directly show the service request form
-            laundry_service_form.style.display = "block";
-            login_form.style.display = "none";
-        } else {
-            // If not logged in, show the warning and then the choice
-            laundry_service_form.style.display = 'none';
-
-            Swal.fire({
-                title: "Authorized users only have access to the service request.",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 3000,
-            }).then(() => {
-                Swal.fire({
-                    title: "Where do you want to proceed?",
-                    showCancelButton: true,
-                    confirmButtonText: "Service Request",
-                    cancelButtonText: "Login",
-                    confirmButtonColor: "#3085d6",  // Blue button for Service Request
-                    cancelButtonColor: "#F4C430"    // Yellow button for Login
-                }).then((choice) => {
-                    if (choice.isConfirmed) {
-                        // If "Service Request" is clicked, show the service request form
-                        laundry_service_form.style.display = "block";
-                        login_form.style.display = "none";
-                    } else {
-                        // If "Login" is clicked, show the login form
-                        login_form.style.display = "block";
-                        laundry_service_form.style.display = "none";
-                    }
-                });
-            });
-        }
-    });
-
-    // Handle login form submission
-    login_form.addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent the form from submitting the traditional way
-
-        if (login_form) {
-        const formData = new FormData(loginForm); // Create FormData from the correct form
-
-            fetch('login.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // isLoggedIn = true;
-
-                    Swal.fire({
-                        title: "You have successfully logged in.",
-                        icon: "success",
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = '/laundry_system/dashboard/dashboard.php';
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: "Login failed",
-                        text: "Invalid username or password.",
-                        timer: 3000
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Error',
-                    text: 'An error occurred during login. Please try again.'
-                });
-            });
-        } else {
-            console.error('Login form not found');
-        }
+            laundry_service_form.style.display = 'block';
+            login_form.style.display = 'none';
     });
 });
-
-
-/* ORIGINAL CODE NI NITNISE  */
-// document.addEventListener('DOMContentLoaded', (event) => {
-//     const btnLogin = document.getElementById('form_open');
-//     //button ito sa may service request
-//     const btnLaundryService = document.getElementById('openService');
-
-//     //para mabuksan yung form ng logi
-//     const login_form = document.getElementById('form_container');
-//     //button ito sa may FORM mismo
-//     const laundry_service_form = document.getElementById('service_form');
-
-//     // Flag to track if the user is logged in
-//    // let isLoggedIn = false;
-
-//     //open the login form
-//     btnLogin.onclick = function() {
-//         login_form.style.display = 'block';
-//         laundry_service_form.style.display = 'none';
-//     }
-
-//     // handle the service request button when clicked
-//     btnLaundryService.addEventListener('click', () => {
-//         laundry_service_form.style.display = 'none';
-
-//         Swal.fire({
-//                 title: "Authorized users only have access to the service request.",
-//                 icon: "warning",
-//                 showConfirmButton: false,
-//                 timer: 3000,
-//         }).then(() => {
-//             //laundry_service_form.style.display = 'none';
-//             Swal.fire({
-//                 title: "Where do you want to proceed?",
-//                 showCancelButton: true,
-//                 confirmButtonText: "Service Request",
-//                 cancelButtonText: "Login",
-//                 confirmButtonColor: "#3085d6",  // Blue button for Service Request
-//                 cancelButtonColor: "#F4C430"    // Yellow button for Login
-//             }).then((choice) => {
-//                 if (choice.isConfirmed) {
-//                 // If "Service Request" is clicked, show the service request form
-//                     laundry_service_form.style.display = "block";
-//                     login_form.style.display = "none";
-//                 } else {
-//                 // If "Login" is clicked, show the login form
-//                     login_form.style.display = "block";
-//                     laundry_service_form.style.display = "none";
-//                 }
-//             });
-//         });
-//     });
-// }); 
 
 //scrolling effect
 window.addEventListener('scroll', () => {
@@ -185,83 +52,6 @@ window.addEventListener('scroll', () => {
     const scaleValue = 0.5 + (scroll * 0.5); // Scale from 0.5 to 1 based on scroll position
     document.body.style.setProperty('--scale', scaleValue);
 }, false);
-
-/*original code ni denise at tin*/
-//POP-UP LOGIN FORM 
-// document.addEventListener('DOMContentLoaded', (event) => {
-//     const login_form = document.getElementById("form_container");
-//     const openLogin = document.getElementById("form_open");
-//     const closeBtn = document.getElementsByClassName("btnClose")[0];
-//     //const service_form = document.getElementById('service_form'); // Added this assuming `service_form` exists
-
-//     //open the login form
-//     openLogin.onclick = function() {
-//         login_form.style.display = "block";
-//         //dagdag ko lang
-//         service_form.style.display = 'none';
-//     }
-
-//     //close the login form
-//     closeBtn.onclick = function() {
-//         login_form.style.display = "none";
-//     }
-
-//     // Show SweetAlert and open login form when Service Request button is clicked
-//     /*openService.addEventListener('click', () => {
-//         Swal.fire({
-//             title: "Authorized users only have access to the service request.",
-//             icon: "warning",
-//             showConfirmButton: false,
-//             timer: 3500,
-//         }).then(() => {
-//             login_form.style.display = "block";
-//             service_form.style.display = 'none';
-//         });
-//     });  */
-
-//     // Handle login form submission
-//     login_form.addEventListener('submit', function (e) {
-//         e.preventDefault(); // Prevent the form from submitting the traditional way
-
-//         const formData = new FormData(login_form);
-
-//         fetch('login.php', {
-//             method: 'POST',
-//             body: formData
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.success) {
-//                 // Show success message without triggering the "Where do you want to proceed?" SweetAlert
-//                 Swal.fire({
-//                     title: "You have successfully logged in.",
-//                     icon: "success",
-//                     timer: 2000,
-//                     showConfirmButton: false
-//                 }).then(() => {
-//                     // Redirect or open the dashboard after successful login
-//                     window.location.href = '/laundry_system/dashboard/dashboard.php';
-//                 });
-//             } else {
-//                 // Show error message if credentials are incorrect
-//                 Swal.fire({
-//                     icon: 'error',
-//                     title: "Login failed",
-//                     text: "Invalid username or password.",
-//                     timer: 3000
-//                 });
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Login Error',
-//                 text: 'An error occurred during login. Please try again.'
-//             });
-//         });
-//     });
-// });
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const service_form = document.getElementById("service_form");
@@ -283,11 +73,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 });
 
-//pop up for laundry service form
+//LOGIN IN SERVICE REQUEST
+let redirectToServiceRequest = false;
 document.addEventListener('DOMContentLoaded', (event) => {
+    //POP-UP LOGIN FORM IN SERVICE REQUEST
+    const login_form = document.getElementById("form_container");
+    const openLogin = document.getElementById("form_open");
+    const closeBtn = document.getElementsByClassName("btnClose")[1];
+
+    //open the service form
+    openLogin.onclick = function() {
+        login_form.style.display = "block";
+    }
+
+    //close the service form
+    closeBtn.onclick = function() {
+        login_form.style.display = "none";
+    }
+
+    //pop up for laundry service form
     const service_form = document.getElementById("service_form");
     const openBtn = document.getElementById("openService");
-    const closeBtn = document.getElementsByClassName("btnClose")[1];
+
+    let isLoggedIn = false;
 
     //open the service form
     openBtn.onclick = function() {
@@ -299,6 +107,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
         service_form.style.display = "none";
     }
 
+    openBtn.addEventListener('click', () => {
+        // Check if the user is logged in
+        if (isLoggedIn) {
+            // Directly show the service request form
+            service_form.style.display = "block";
+            login_form.style.display = 'none';
+        } else {
+            //if not logged in, show the warning and then the choice
+            service_form.style.display = 'none';
+
+            Swal.fire({
+                title: "Authorized users only have access to the service request.",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 3000,
+            }).then(() => {
+                Swal.fire({
+                    title: "Please log in to access the service request.",
+                    showConfirmButton: true,
+                    icon: "warning"
+                    // confirmButtonText: "Service Request",
+                    // confirmButtonColor: "#3085d6",  // Blue button for Service Request
+                }).then((choice) => {
+                    if (choice.isConfirmed) {
+                        redirectToServiceRequest = true;
+                        login_form.style.display = "block";
+                        service_form.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
 });
 
 //OVERVIEW PANEL
@@ -342,6 +182,7 @@ function validateContactNumber(input) {
 /*********************LOGIN FORM************************/
 document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault(); 
+    const service_form = document.getElementById("service_form");
 
     const formData = new FormData(this); 
 
@@ -349,49 +190,37 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json()) 
+    .then(response => response.json()) // Parse the JSON response
     .then(data => {
         if (data.success) {
-            // Display the "Where do you want to proceed?" SweetAlert on successful login
-            Swal.fire({
-                title: "Where do you want to proceed?",
-                showCancelButton: true,
-                confirmButtonText: "Service Request",
-                cancelButtonText: "Login",
-                confirmButtonColor: "#3085d6",  // Blue button
-                cancelButtonColor: "#F4C430"       // Yellow button
-            }).then((choice) => {
-                if (choice.isConfirmed) {
-                    // If "Service Request" is clicked, show the service request form
-                    document.getElementById("service_form").style.display = "block";
-                    document.getElementById("form_container").style.display = "none";
+            isLoggedIn = true;
+             Swal.fire({
+                title: "You have successfully logged in.",
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                if (redirectToServiceRequest) {
+                    redirectToServiceRequest = false;
+                    service_form.style.display = "block";
                 } else {
-                    // If "Login" is clicked, redirect to the dashboard
-                    Swal.fire("You have successfully succeeded.", "", "success").then(() => {
-                        window.location.href = '/laundry_system/dashboard/dashboard.php';
-                    });
+                     window.location.href = '/laundry_system/dashboard/dashboard.php';
                 }
+               
             });
         } else {
-            // Show error message if credentials are incorrect
+            //error message
             Swal.fire({
                 icon: 'error',
-                title: data.title || "Login failed", 
-                text: data.message || "Invalid username or password.",
-                timer: 3000
+                title: data.title,
+                text: data.message,
             });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Login Error',
-            text: 'An error occured during login. Please try again.'
-        });
     });
 });
-
 
 /***************************LAUNDRY SERVICE REQUEST****************************/
 //fetch laundry service
@@ -488,7 +317,7 @@ function fetchServiceOptions() {
         .then(data => {
             console.log(data);
             let dropdown = document.getElementById('service_option');
-            dropdown.innerHTML = '<option selected>--Select Option--</option>'; //clear existing options
+            dropdown.innerHTML = '<option selected disabled>--Select Option--</option>'; //clear existing options
             data.forEach(service_option => {
                 let option = document.createElement('option');
                 option.value = service_option.option_id;
@@ -512,25 +341,6 @@ function updateTotalAmount() {
     var finalTotalAmount = totalPrice + deliveryFee + rushFee;
     $('#total_amount').val(finalTotalAmount.toFixed(2));
 }
-
-//fetch service options price
-$('#service_option').change(function() {
-    const serviceOptionId = $(this).val();
-    const selectedOptionText = $(this).find('option:selected').text();
-  
-    if (selectedOptionText === 'Customer Pick-Up') {
-        $('#delivery_fee').val('');  
-        updateTotalAmount(); 
-     }
-     else if (selectedOptionText === 'Delivery') {
-        $('#delivery_fee').val(''); 
-        updateTotalAmount();
-    } else {
-        $('#delivery_fee').val(''); 
-        updateTotalAmount();
-    }
-});
-
 
 //FETCH RUSH PRICE
 $('#rush').change(function() {
@@ -909,7 +719,7 @@ $(document).ready(function() {
             type: 'POST',
             url: 'saveServiceDetails.php',
             data: serviceDetails,
-            dataType: 'json', // Expecting JSON response
+            dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
                     Swal.fire({
@@ -919,7 +729,65 @@ $(document).ready(function() {
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        // Further actions upon success
+                        //to set a flag to trigger the other page to refresh
+                        localStorage.setItem("refreshOtherPage", "true");
+
+                        resetOrder();
+                        $('#form_id')[0].reset();
+                        $('#form-service input, #form-service select, #form-service textarea').val('');
+    
+                        // Update the invoice with service details
+                        $('#invoice_customer_id_hidden').text(serviceDetails.customer_id);
+                        $('#invoice_name').text(serviceDetails.customer_name);
+                        $('#invoice_date').text(new Date().toLocaleString('en-GB', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false // 24-hour format
+                        }));
+                        $('#invoice_contact_number').text(serviceDetails.contact_number);
+                        $('#invoice_address').text(serviceDetails.address);
+                        $('#invoice_service_type').text(serviceDetails.service_option);
+                        $('#invoice_pickup_delivery_date').text(serviceDetails.pickup_date);
+
+                        var orders = JSON.parse(sessionStorage.getItem('orders')) || [];
+
+                        orders.forEach(order => {
+                            var serviceRow = `
+                                <tr>
+                                    <td>${order.serviceOption}</td>
+                                    <td>${order.categoryOption}</td>
+                                    <td>${order.quantity}</td>
+                                    <td>${order.weight}</td>
+                                    <td>${order.price}</td>
+                                </tr>
+                            `;
+                            $('#services-table tbody').append(serviceRow);
+                        });
+    
+                        if ($('#services-table tbody tr.additional-fees').length === 0) {
+                            var additionalFeesRow = `
+                                <tr class="additional-fees">
+                                    <td colspan="4">Delivery Fee</td>
+                                    <td>₱${deliveryFee.toFixed(2)}</td>
+                                </tr>
+                                ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
+                                <tr class="additional-fees">
+                                    <td colspan="4"><strong>Total Amount</strong></td>
+                                    <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
+                                </tr>
+                            `;
+    
+                            $('#services-table tbody').append(additionalFeesRow);
+                        }
+    
+                        // Show the invoice container
+                        $('#print_invoice').show();
+                        $('#print_invoice_btn').show();
+                        console.log("Invoice data set and container shown.");
                     });
                 } else {
                     Swal.fire("Service details not saved!", response.message, "error");
@@ -930,8 +798,8 @@ $(document).ready(function() {
                 Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
             }
         });
-    });
-    
+    })
+
     /*function printInvoice() {
         var printButton = document.getElementById('print_invoice_btn');
         printButton.style.display = 'none';
@@ -1224,53 +1092,55 @@ $(document).ready(function() {
     ];
 
     const barangaySelect = document.getElementById("barangaySelect");
-    const deliveryFeeInput = document.getElementById("delivery_fee");
-
+    
+    //barangay options
     brgys.forEach(brgy => {
         const option = document.createElement("option");
-        option.value = brgy;       
-        option.textContent = brgy;    
-        barangaySelect.appendChild(option);  
+        option.value = brgy;
+        option.textContent = brgy;
+        barangaySelect.appendChild(option);
     });
 
-    function fetchDeliveryFee(serviceOptionId) {
-        $.ajax({
-            type: 'GET',
-            url: '/laundry_system/homepage/getServiceOptionRate.php',
-            data: { option_id: serviceOptionId },
-            dataType: 'json'
-        })
-        .done(function(data) {
-            if (data.error === 0) {
-                deliveryFeeInput.value = parseFloat(data.price).toFixed(2);
-                updateTotalAmount();
-            } else {
-                console.log('Error:', data.message);
-            }
-        })
-        .fail(function(xhr, status, error) {
-            console.log('Ajax error:', error);
-        });
-    }
-    
-    $('#barangaySelect').change(function() {
-        const selectedBarangay = $(this).find('option:selected').text();
-    
-        // Set delivery fee based on barangay selection dynamically
-        const deliveryServiceOptionId = (selectedBarangay === "Gaya-gaya") ? 4 : 1; // ID "Gaya-gaya" || other barangays
-        fetchDeliveryFee(deliveryServiceOptionId);
-    });
-    
-    // Event listener for service selection
-    serviceOptionSelect.change(function() {
+    //fetch service options price and brgy price based on the selected brgy
+    $('#service_option').change(function() {
+        const serviceOptionId = $(this).val();
         const selectedOptionText = $(this).find('option:selected').text();
-    
-        if (selectedOptionText === 'Delivery') {
-            deliveryFeeInput.value = "";
+        const selectedBarangay = barangaySelect.value;
+        
+        if (selectedOptionText === 'Customer Pick-Up') {
+            $('#delivery_fee').val('');
+            updateTotalAmount();
+        } else if (serviceOptionId) {
+            const d_categoryID = (selectedBarangay === "Gaya-gaya") ? 2 : 1; //ID for "Gaya-gaya" : other barangay
+
+            $.ajax({
+                type: 'GET',
+                url: '/laundry_system/homepage/getServiceOptionRate.php',
+                data: { option_id: serviceOptionId, d_categoryID: d_categoryID },
+                dataType: 'json'
+            })
+            .done(function(data) {
+                console.log('Received data:', data);
+                if (data.error === 0) {
+                    console.log('Setting price to:', data.price);
+                    if (selectedOptionText === 'Delivery') {
+                        $('#delivery_fee').val(parseFloat(data.price).toFixed(2));
+                    }
+                    updateTotalAmount(); 
+                } else {
+                    console.log('Error:', data.message);
+                }
+            })
+            .fail(function(xhr, status, error) {
+                console.log('Ajax error:', error);
+            });
         } else {
-            // Trigger the barangay selection change to apply the correct delivery fee on charge section
-            $('#barangaySelect').trigger('change');
+            $('#delivery_fee').val('');
+            updateTotalAmount();
         }
     });
 
+    barangaySelect.addEventListener('change', function() {
+        $('#service_option').trigger('change'); // to trigger the service option change
+    });
 });

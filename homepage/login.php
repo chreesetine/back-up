@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['username'] =  $data['username'];
                 $_SESSION['user_id'] =  $data['user_id'];
 
+                // Update last_active to current timestamp
+                $updateStmt = $conn->prepare("UPDATE user SET last_active = NOW() WHERE user_id = ?");
+                $updateStmt->bind_param("i", $data['user_id']);
+                $updateStmt->execute();
+                $updateStmt->close(); 
+
                 echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false, 'title' => 'Mismatch password', 'message' => 'The password you entered is incorrect!']);

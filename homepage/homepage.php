@@ -335,19 +335,20 @@ $conn->close();
                             placeholder="Block, Lot, Street, and Subdivision" ></textarea>
                         </div>
                     </div>
-                    <form action="saveServiceDetails.php" method="POST">
+
+                    <!-- <form action="saveServiceDetails.php" method="POST"> -->
                     <div class="row">
                         <div class="col">
                             <select class="form-select" aria-label="province" name="province" id="province">
-                                <option value="" disabled selected>Province</option>
-                                <option value="Bulacan">Bulacan</option>
+                                <option selected disabled>Province</option>
+                                <option value="bulacan">Bulacan</option>
                             </select>
                         </div>
 
                         <div class="col">
                             <select class="form-select" aria-label="city" name="city" id="city">
-                                <option value="" disabled selected>City</option>
-                                <option value="San Jose del Monte">San Jose del Monte</option>
+                                <option selected disabled>City</option>
+                                <option value="sjdm">San Jose del Monte</option>
                             </select>
                         </div>
                     </div>
@@ -359,7 +360,6 @@ $conn->close();
                             </select>
                         </div>
                     </div>
-                    </form>
 
                     <div class="row">
                         <div class="col">

@@ -27,30 +27,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+     // Update customer address in tbl_customer
+     $sqlUpdateCustomer = "UPDATE customer SET province = ? WHERE customer_id = ?";
+     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
+     $stmtUpdateCustomer->bind_param('si', $province, $customerId);
+ 
+     if (!$stmtUpdateCustomer->execute()) {
+         echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
+         $stmtUpdateCustomer->close();
+         $conn->close();
+         exit;
+     }
+ 
+     // Update city
+     $sqlUpdateCustomer = "UPDATE customer SET city = ? WHERE customer_id = ?";
+     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
+     $stmtUpdateCustomer->bind_param('si', $city, $customerId);
+ 
+     if (!$stmtUpdateCustomer->execute()) {
+         echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
+         $stmtUpdateCustomer->close();
+         $conn->close();
+         exit;
+     } 
+
     // Update customer address in tbl_customer
-    $sqlUpdateCustomer = "UPDATE customer SET province = ? WHERE customer_id = ?";
-    $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
-    $stmtUpdateCustomer->bind_param('si', $province, $customerId);
-
-    if (!$stmtUpdateCustomer->execute()) {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
-        $stmtUpdateCustomer->close();
-        $conn->close();
-        exit;
-    }
-
-    // Additional updates for city, address, and brgy...
-    $sqlUpdateCustomer = "UPDATE customer SET city = ? WHERE customer_id = ?";
-    $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
-    $stmtUpdateCustomer->bind_param('si', $city, $customerId);
-
-    if (!$stmtUpdateCustomer->execute()) {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
-        $stmtUpdateCustomer->close();
-        $conn->close();
-        exit;
-    }
-
     $sqlUpdateCustomer = "UPDATE customer SET address = ? WHERE customer_id = ?";
     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
     $stmtUpdateCustomer->bind_param('si', $address, $customerId);
@@ -62,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Update barangay 
     $sqlUpdateCustomer = "UPDATE customer SET brgy = ? WHERE customer_id = ?";
     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
     $stmtUpdateCustomer->bind_param('si', $brgy, $customerId);
@@ -72,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->close();
         exit;
     }
+
     $stmtUpdateCustomer->close();
 
     // Get active request_ids for the customer
