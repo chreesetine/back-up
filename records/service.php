@@ -162,24 +162,6 @@ if ($_SESSION['user_role'] !== 'admin') {
             </nav>
 
             <div class="buttons">
-                <!-- <form action="customer.php" method="POST" id="cust-btn-form">
-                    <div class="customer_button">
-                         <button type="button" class="btn-primary" id="customerBtn">Customer</button>
-                    </div>
-                </form> 
-
-               <form action="service.php" method="POST">
-                    <div class="service_button">
-                        <button type="button" class="btn-primary" id="serviceBtn">Service</button>
-                    </div>
-                </form>
-
-                <form action="category.php" method="POST">
-                    <div class="category_button">
-                        <button type="button" class="btn-primary" id="categoryBtn">Category</button>
-                    </div>
-                </form> -->
-                
                 <div class="customer_button">
                     <a href="customer.php" class="button" id="customerBtn">Customer</a>
                 </div>
