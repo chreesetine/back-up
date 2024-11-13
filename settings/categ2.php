@@ -28,27 +28,6 @@ if ($result) {
         $prices[] = $row;
     }
 }
-
-/* if (isset($_POST['submit'])) {
-    $laundry_category_option = $_POST['laundry_category_option'];
-    $laundry_service_option = $_POST['laundry_service_option'];
-    $price = $_POST['price'];
-
-    // Update price in the service_category_price table
-    $sql = "UPDATE `service_category_price` 
-            JOIN category c ON scp.category_id = c.category_id
-            JOIN service s ON scp.service_id = s.service_id
-            SET scp.price = '$price' 
-            WHERE c.laundry_category_option = '$laundry_category_option' 
-            AND s.laundry_service_option = '$laundry_service_option";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        $showSuccessPopup = true; 
-    } else {
-        $showErrorPopup = true; 
-    }
-}*/
 $conn->close();
 ?>
 
@@ -106,7 +85,7 @@ $conn->close();
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/records/customer.php" class="sidebar-link has-dropdown collapsed"
+                        <a href="#" class="sidebar-link has-dropdown collapsed"
                             data-bs-toggle="collapse" data-bs-target="#records" aria-expanded="false"
                             aria-controls="records">
                             <i class="lni lni-files"></i>
@@ -154,10 +133,29 @@ $conn->close();
                     <hr style="border: 1px solid #b8c1ec; margin: 8px">
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        data-bs-target="#archived" aria-expanded="false" aria-controls="archived">
                             <i class='bx bxs-archive-in'></i>
-                            <span class="nav-item">Archived</span>
+                            <span>Archived</span>
                         </a>
+
+                        <ul id="archived" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">Archived Users</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_customer.php" class="sidebar-link">Archived Customer</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_service.php" class="sidebar-link">Archived Service</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_category.php" class="sidebar-link">Archived Category</a>
+                            </li>
+                        </ul>
                     </li>
                 <?php endif; ?>
             </ul>

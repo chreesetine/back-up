@@ -57,7 +57,9 @@ h1 {
 
 #sidebar {
   display: flex;
+  height: 100%;
   width: 70px;
+  overflow: auto;
   min-width: 70px;
   z-index: 1000;
   transition: all 0.25s ease-in-out;
@@ -221,7 +223,6 @@ a.sidebar-link:hover {
   gap: 10px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
-
 
 .form-container label {
   margin-right: 10px;

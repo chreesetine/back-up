@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", sans-serif;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 .progress {
@@ -57,7 +57,9 @@ height: 100vh;
 
 #sidebar {
 display: flex;
+height: 100%;
 width: 70px;
+overflow: auto;
 min-width: 70px;
 z-index: 1000;
 transition: all 0.25s ease-in-out;

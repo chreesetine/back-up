@@ -1,12 +1,12 @@
 <?php
 session_start(); 
 
+$user_role = $_SESSION['user_role'];
+
 if(!isset($_SESSION['user_role'])) {
     header('location: /laundry_system/homepage/homepage.php');
     exit();
 }
-
-$user_role = $_SESSION['user_role'];
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +29,6 @@ $user_role = $_SESSION['user_role'];
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    
-   
 </head>
 <body>
     <div class="progress"></div>
@@ -42,7 +40,7 @@ $user_role = $_SESSION['user_role'];
                 </button>
 
                 <div class="sidebar-logo">
-                    <a href="/laundry_system/dashboard/dashboard.php">Azia Skye</a>
+                    <a href="#">Azia Skye</a>
                 </div>
             </div>
 
@@ -68,9 +66,9 @@ $user_role = $_SESSION['user_role'];
                             <span>Users</span>
                         </a>
                     </li>
-                    
+
                     <li class="sidebar-item">
-                        <a href="/laundry_system/records/records.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
                             <span>Records</span>
@@ -106,7 +104,7 @@ $user_role = $_SESSION['user_role'];
                     </a>
                 </li>
 
-                <?php if ($user_role === 'admin') : ?>
+                    <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
                         <a href="/laundry_system/settings/setting.php" class="sidebar-link">
                             <i class="lni lni-cog"></i>
@@ -115,8 +113,9 @@ $user_role = $_SESSION['user_role'];
                     </li>
 
                     <hr style="border: 1px solid #b8c1ec; margin: 8px">
+
                     <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                         data-bs-target="#archived" aria-expanded="false" aria-controls="archived">
                             <i class='bx bxs-archive-in'></i>
                             <span>Archived</span>
@@ -140,34 +139,27 @@ $user_role = $_SESSION['user_role'];
                             </li>
                         </ul>
                     </li>
-
-                    <!-- <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
-                            <i class='bx bxs-archive-in'></i>
-                            <span class="nav-item">Archived</span>
-                        </a>
-                    </li> -->
                 <?php endif; ?>
+
             </ul>
 
             <div class="sidebar-footer">
-                <a href="javascript:void(0)" class="sidebar-link" id="btn_logout">
+                <a href="#" id="btn_logout" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
         
-       <!-------------MAIN CONTENT------------->
-       <div class="main-content">
+        <!-------------MAIN CONTENT------------->
+        <div class="main-content">
             <nav>
                 <div class="d-flex justify-content-between align-items-center">
                     <h1>Dashboard</h1>
                 </div>
             </nav>
-                
                  <!----CARDS FOR SERVICE TYPE ORDERS (RUSH/PICK UP/DELIVERY) ---->
-                 <div class="cards">
+                <div class="cards">
                     <div class="card card-body p-3">
                         <h4>Customer Pick-Up</h4>
                         <h5 id="pickup-orders">
@@ -297,7 +289,6 @@ $user_role = $_SESSION['user_role'];
                             <h4>Service Requests in Week</h4>
                             <canvas id="weekchart"></canvas> 
                         </div>
-                        
                         <!----------------------------------------ORDERS IN MONTH---------------------------------->
                         <div class="chart" id="monthlyChart">
                             <h4>Service Requests in Month</h4>
@@ -313,7 +304,6 @@ $user_role = $_SESSION['user_role'];
                     </div> <!--end of charts-->   
                 </div> <!--end of charts-container-->
                 
-                <!--------------CALENDAR------------------->
                 <!--------------CALENDAR------------------->
                 <div class="container">
                     <div class="left">
@@ -512,18 +502,17 @@ $user_role = $_SESSION['user_role'];
                         displayEventsForDate(new Date().getDate(), <?php echo json_encode($events); ?>);
                     </script>
                 </div> <!--END OF CALENDAR CONTAINER-->
-
-                <!-- logout -->
-                <div id="logoutModal" class="modal" style="display: none;">
-                    <div class="modal-cont">
-                        <span class="close">&times;</span>
-                        <h2>Do you want to logout?</h2>
-                        <div class="modal-buttons">
-                            <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
-                            <button class="btn btn-no">No</button>
-                        </div>
+            
+            <div id="logoutModal" class="modal" style="display:none;">
+                <div class="modal-cont">
+                    <span class="close">&times;</span>
+                    <h2>Do you want to logout?</h2>
+                    <div class="modal-buttons">
+                        <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
+                        <button class="btn btn-no">No</button>
                     </div>
                 </div>
+            </div>
 
         </div> <!--end of main content-->
     </div><!--end of wrapper--->

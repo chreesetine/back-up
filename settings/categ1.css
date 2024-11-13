@@ -57,7 +57,9 @@ height: 100vh;
 
 #sidebar {
 display: flex;
+height: 100%;
 width: 70px;
+overflow: auto;
 min-width: 70px;
 z-index: 1000;
 transition: all 0.25s ease-in-out;
