@@ -912,6 +912,10 @@ $(document).ready(function() {
             dataType: 'json', // Expecting JSON response
             success: function(response) {
                 if (response.status === 'success') {
+                    // Trigger reload in other tabs by setting dataUpdated to true
+                    localStorage.setItem('dataUpdated', 'true');
+                    console.log("Data update triggered, dataUpdated set to:", localStorage.getItem('dataUpdated'));
+
                     Swal.fire({
                         title: "Great! Service details saved successfully.",
                         text: response.message,
@@ -919,7 +923,7 @@ $(document).ready(function() {
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        // Further actions upon success
+                        // Additional actions upon success (if needed)
                     });
                 } else {
                     Swal.fire("Service details not saved!", response.message, "error");
@@ -929,7 +933,7 @@ $(document).ready(function() {
                 console.error("Save Service Details Error: " + error);
                 Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
             }
-        });
+        });        
     });
     
     /*function printInvoice() {
