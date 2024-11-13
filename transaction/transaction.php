@@ -170,7 +170,10 @@ if ($result->num_rows > 0) {
                         <tr class="bg-dark text-white">
                             <th>Transaction ID</th>
                             <th>Customer Name</th>
+                            <th>Province</th>
+                            <th>City</th>
                             <th>Customer Address</th>
+                            <th>Barangay</th>
                             <th>Service Option Name</th>
                             <th>Laundry Cycle</th>
                             <th>Total Amount</th>
@@ -188,7 +191,10 @@ if ($result->num_rows > 0) {
                                 echo "<tr>";
                                 echo "<td>{$row['transaction_id']}</td>";
                                 echo "<td>{$row['customer_name']}</td>";
+                                echo "<td>{$row['province']}</td>";
+                                echo "<td>{$row['city']}</td>";
                                 echo "<td>{$row['customer_address']}</td>";
+                                echo "<td>{$row['brgy']}</td>";
                                 echo "<td>{$row['service_option_name']}</td>";
                                 echo "<td>{$row['laundry_cycle']}</td>";
                                 echo "<td>{$row['total_amount']}</td>";

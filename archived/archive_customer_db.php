@@ -1,8 +1,8 @@
 <?php
+header('Content-Type: application/json');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-header('Content-Type: application/json');
 
 $host = 'localhost'; 
 $db = 'laundry_db';
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Prepare and execute your archiving query here
         try {
-            $stmt = $pdo->prepare("INSERT INTO archived_customers (customer_id, customer_name, contact_number, address, archived_at) SELECT customer_id, customer_name, contact_number, address, NOW() FROM customer WHERE customer_id = :customer_id");
+            $stmt = $pdo->prepare("INSERT INTO archived_customers (customer_id, customer_name, contact_number, province, city, address, brgy, archived_at) SELECT customer_id, customer_name, contact_number,province, city, address, brgy, NOW() FROM customer WHERE customer_id = :customer_id");
             $stmt->bindParam(':customer_id', $customerId, PDO::PARAM_INT);
             $stmt->execute();
 

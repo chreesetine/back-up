@@ -173,7 +173,10 @@ $user_role = $_SESSION['user_role'];
                                 <th>Customer ID</th>
                                 <th>Customer Name</th>
                                 <th>Contact Number</th>
+                                <th>Province</th>
+                                <th>City</th>
                                 <th>Address</th>
+                                <th>Barangay</th>
                                 <th>Date Archived</th>
                             </tr>    
                         </thead>    
@@ -191,7 +194,10 @@ $user_role = $_SESSION['user_role'];
                                         <td><?php echo $row['customer_id']; ?></td>
                                         <td><?php echo $row['customer_name']; ?></td>
                                         <td><?php echo $row['contact_number']; ?></td>
+                                        <td><?php echo $row['province']; ?></td>
+                                        <td><?php echo $row['city']; ?></td>
                                         <td><?php echo $row['address']; ?></td>
+                                        <td><?php echo $row['brgy']; ?></td>
                                         <td><?php echo $row['archived_at']; ?></td>
                                     </tr>
                                 <?php

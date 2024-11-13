@@ -8,7 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $serviceId = $_POST['serviceId'] ?? null;
     $serviceOptionName = $_POST['service_option'] ?? null;
     $isRush = $_POST['is_rush'];
+    $province = $_POST['province'] ?? null;
+    $city = $_POST['city'] ?? null;
     $address = $_POST['address'] ?? null;
+    $brgy = $_POST['brgy'] ?? null;
     $pickupDate = date('Y-m-d', strtotime($_POST['pickup_date'] ?? null));
     $totalAmount = $_POST['total_amount'] ?? null;
     $deliveryFee = $_POST['delivery_fee'] ?? null;
@@ -25,9 +28,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update customer address in tbl_customer
+    $sqlUpdateCustomer = "UPDATE customer SET province = ? WHERE customer_id = ?";
+    $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
+    $stmtUpdateCustomer->bind_param('si', $province, $customerId);
+
+    if (!$stmtUpdateCustomer->execute()) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
+        $stmtUpdateCustomer->close();
+        $conn->close();
+        exit;
+    }
+
+    // Additional updates for city, address, and brgy...
+    $sqlUpdateCustomer = "UPDATE customer SET city = ? WHERE customer_id = ?";
+    $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
+    $stmtUpdateCustomer->bind_param('si', $city, $customerId);
+
+    if (!$stmtUpdateCustomer->execute()) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
+        $stmtUpdateCustomer->close();
+        $conn->close();
+        exit;
+    }
+
     $sqlUpdateCustomer = "UPDATE customer SET address = ? WHERE customer_id = ?";
     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
     $stmtUpdateCustomer->bind_param('si', $address, $customerId);
+
+    if (!$stmtUpdateCustomer->execute()) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
+        $stmtUpdateCustomer->close();
+        $conn->close();
+        exit;
+    }
+
+    $sqlUpdateCustomer = "UPDATE customer SET brgy = ? WHERE customer_id = ?";
+    $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
+    $stmtUpdateCustomer->bind_param('si', $brgy, $customerId);
 
     if (!$stmtUpdateCustomer->execute()) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to update customer address: ' . $stmtUpdateCustomer->error]);
@@ -63,10 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Process each active request_id
     foreach ($requestIds as $requestId) {
         // Insert transaction details into tbl_transaction
-        $sqlTransaction = "INSERT INTO transaction (request_id, customer_id, customer_name, service_option_id, service_option_name, laundry_cycle, customer_address, total_amount, delivery_fee, rush_fee, amount_tendered, money_change)
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sqlTransaction = "INSERT INTO transaction (request_id, customer_id, customer_name, service_option_id, service_option_name, laundry_cycle, province, city, customer_address, brgy, total_amount, delivery_fee, rush_fee, amount_tendered, money_change)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmtTransaction = $conn->prepare($sqlTransaction);
-        $stmtTransaction->bind_param('iisisssddddd', $requestId, $customerId, $customerName, $serviceId, $serviceOptionName, $isRush, $address, $totalAmount, $deliveryFee, $rushFee, $amountTendered, $change);
+        $stmtTransaction->bind_param('iisissssssddddd', $requestId, $customerId, $customerName, $serviceId, $serviceOptionName, $isRush, $province, $city, $address, $brgy, $totalAmount, $deliveryFee, $rushFee, $amountTendered, $change);
 
         if (!$stmtTransaction->execute()) {
             $conn->rollback();

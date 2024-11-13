@@ -859,7 +859,10 @@ $(document).ready(function() {
         var serviceId = $('select[name="service_option"]').val();
         var serviceOption = $('select[name="service_option"] option:selected').text();
         var isRush = $('#rush').is(':checked') ? 'Rush' : 'Standard';
+        var province = $('#province').val();
+        var city = $('#city').val();
         var address = $('#address').val();
+        var brgy = $('#barangaySelect').val();
         var pickupDate = $('#pickup_date').val();
         var deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
         var rushFee = parseFloat($('#rush_fee').val()) || 0;
@@ -888,7 +891,10 @@ $(document).ready(function() {
             serviceId: serviceId,
             service_option: serviceOption,
             is_rush: isRush,
+            province: province,
+            city: city,
             address: address,
+            brgy: brgy,
             pickup_date: pickupDate,
             total_amount: finalTotalAmount.toFixed(2),
             delivery_fee: deliveryFee,
@@ -903,7 +909,7 @@ $(document).ready(function() {
             type: 'POST',
             url: 'saveServiceDetails.php',
             data: serviceDetails,
-            dataType: 'json',
+            dataType: 'json', // Expecting JSON response
             success: function(response) {
                 if (response.status === 'success') {
                     Swal.fire({
@@ -913,65 +919,7 @@ $(document).ready(function() {
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        //to set a flag to trigger the other page to refresh
-                        localStorage.setItem("refreshOtherPage", "true");
-
-                        resetOrder();
-                        $('#form_id')[0].reset();
-                        $('#form-service input, #form-service select, #form-service textarea').val('');
-    
-                        // Update the invoice with service details
-                        $('#invoice_customer_id_hidden').text(serviceDetails.customer_id);
-                        $('#invoice_name').text(serviceDetails.customer_name);
-                        $('#invoice_date').text(new Date().toLocaleString('en-GB', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            hour12: false // 24-hour format
-                        }));
-                        $('#invoice_contact_number').text(serviceDetails.contact_number);
-                        $('#invoice_address').text(serviceDetails.address);
-                        $('#invoice_service_type').text(serviceDetails.service_option);
-                        $('#invoice_pickup_delivery_date').text(serviceDetails.pickup_date);
-
-                        var orders = JSON.parse(sessionStorage.getItem('orders')) || [];
-
-                        orders.forEach(order => {
-                            var serviceRow = `
-                                <tr>
-                                    <td>${order.serviceOption}</td>
-                                    <td>${order.categoryOption}</td>
-                                    <td>${order.quantity}</td>
-                                    <td>${order.weight}</td>
-                                    <td>${order.price}</td>
-                                </tr>
-                            `;
-                            $('#services-table tbody').append(serviceRow);
-                        });
-    
-                        if ($('#services-table tbody tr.additional-fees').length === 0) {
-                            var additionalFeesRow = `
-                                <tr class="additional-fees">
-                                    <td colspan="4">Delivery Fee</td>
-                                    <td>₱${deliveryFee.toFixed(2)}</td>
-                                </tr>
-                                ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
-                                <tr class="additional-fees">
-                                    <td colspan="4"><strong>Total Amount</strong></td>
-                                    <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
-                                </tr>
-                            `;
-    
-                            $('#services-table tbody').append(additionalFeesRow);
-                        }
-    
-                        // Show the invoice container
-                        $('#print_invoice').show();
-                        $('#print_invoice_btn').show();
-                        console.log("Invoice data set and container shown.");
+                        // Further actions upon success
                     });
                 } else {
                     Swal.fire("Service details not saved!", response.message, "error");
@@ -982,8 +930,8 @@ $(document).ready(function() {
                 Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
             }
         });
-    })
-
+    });
+    
     /*function printInvoice() {
         var printButton = document.getElementById('print_invoice_btn');
         printButton.style.display = 'none';

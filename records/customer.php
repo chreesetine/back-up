@@ -182,7 +182,10 @@ if ($_SESSION['user_role'] !== 'admin') {
                             <th>Customer ID</th>
                             <th>Customer Name</th>
                             <th>Contact Number</th>
+                            <th>Province</th>
+                            <th>City</th>
                             <th>Address</th>
+                            <th>Barangay</th>
                             <th>Archive</th>
                         </tr>
                     </thead>
@@ -198,13 +201,19 @@ if ($_SESSION['user_role'] !== 'admin') {
                                 <td><?php echo $row['customer_id']; ?></td>
                                 <td><?php echo $row['customer_name']; ?></td>
                                 <td><?php echo $row['contact_number']; ?></td>
+                                <td><?php echo $row['province']; ?></td>
+                                <td><?php echo $row['city']; ?></td>
                                 <td><?php echo $row['address']; ?></td>
+                                <td><?php echo $row['brgy']; ?></td>
                                 <td>
                                     <a href="javascript:void(0);" class="archive-btn" 
                                         data-id="<?php echo $row['customer_id']; ?>" 
                                         data-name="<?php echo $row['customer_name']; ?>"
                                         data-contact="<?php echo $row['contact_number']; ?>"
-                                        data-address="<?php echo $row['address']; ?>">
+                                        data-contact="<?php echo $row['province']; ?>"
+                                        data-contact="<?php echo $row['city']; ?>"
+                                        data-address="<?php echo $row['address']; ?>"
+                                        data-contact="<?php echo $row['brgy']; ?>">
                                         <i class='bx bxs-archive-in'></i>
                                     </a>
                                 </td>
