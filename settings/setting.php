@@ -15,21 +15,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve from database
+// Retrieve current settings from the database
 $sql = "SELECT min_kilos, delivery_day, rush_delivery_day FROM settings";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 
-// Fetch the delivery and pick up prices from price table
-$sqlServiceOption = "SELECT price FROM service_option_price WHERE service_option_type = 'Delivery'";
+$sqlServiceOption = "SELECT price FROM service_option_price WHERE service_option_type = 'Delivery (outside gaya-gaya)'";
 $resultDelivery = mysqli_query($conn, $sqlServiceOption);
 $rowDelivery = mysqli_fetch_assoc($resultDelivery);
 $delivery_charge = $rowDelivery['price'];
 
-$sqlServiceOption = "SELECT price FROM service_option_price WHERE service_option_type = 'Pick up'";
+$sqlServiceOption = "SELECT price FROM service_option_price WHERE service_option_type = 'Delivery (within gaya-gaya)'";
+$resultDelivery = mysqli_query($conn, $sqlServiceOption);
+$rowDelivery = mysqli_fetch_assoc($resultDelivery);
+$d_fee_gaya = $rowDelivery['price'];
+
+$sqlServiceOption = "SELECT price FROM service_option_price WHERE service_option_type = 'Rush'";
 $resultPickup = mysqli_query($conn, $sqlServiceOption);
 $rowPickup = mysqli_fetch_assoc($resultPickup);
-$rush_charge = $rowDelivery['price'];
+$rush_charge = $rowPickup['price'];
 
 $minimum_kilos = $row['min_kilos'];
 $delivery_day = $row['delivery_day'];
@@ -39,7 +43,9 @@ $rush_delivery_day = $row['rush_delivery_day'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $minimum_kilos = $_POST['min_kilos'];
     $delivery_day = $_POST['delivery_day'];
+    $rush_delivery_day = $_POST['rush_delivery_day'];
     $delivery_charge = $_POST['delivery_charge'];
+    $d_fee_gaya = $_POST['d_fee_gaya'];
     $rush_charge = $_POST['rush_charge'];
 
     $success = true;
@@ -53,8 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors .= "Error updating settings: " . mysqli_error($conn) . "\n";
     }
 
-    //to update delivery fee
+    //to update delivery fee outside gaya gaya
     $sql = "UPDATE service_option_price SET price='$delivery_charge' WHERE service_option_type='Delivery'";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        $success = false;
+        $errors .= "Error updating delivery charge: " . mysqli_error($conn) . "\n";
+    }
+
+    //to update delivery fee within gaya gaya
+    $sql = "UPDATE service_option_price SET price='$d_fee_gaya' WHERE service_option_type='Delivery (within gaya-gaya)'";
     $result = mysqli_query($conn, $sql);
     if (!$result) {
         $success = false;
@@ -84,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -220,69 +235,118 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </aside>
 
+        <!-------------MAIN CONTENT------------->
         <div class="main-content">
             <nav>
                 <div class="d-flex justify-content-between align-items-center">
                     <h1>Settings</h1>
                 </div>
             </nav>
+            
+            <div class="container" id="priceSetting">
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-success me-md-2" type="button" id="set_price" data-bs-toggle="modal" data-bs-target="#categ_price_modal">
+                    <i class='bx bxs-purchase-tag' ></i>
+                    Set Price</button>
+                </div
+            </div>
 
-            <div class="buttons">
-                <div class="wdf_button">
-                    <a href="categ1.php" class="button" id="wdfBtn">Wash/Dry/Fold</a>
-                </div>
-                    
-                <div class="wdp_button">
-                    <a href="categ2.php" class="button" id="wdpBtn">Wash/Dry/Press</a>
-                </div>
-                
-                <div class="dry_button">
-                    <a href="categ3.php" class="button" id="dryBtn">Dry only</a>
-                </div>       
-            </div> 
+            <div class="modal fade" id="categ_price_modal" tabindex="-1" aria-labelledby="category_price" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="label_categ">Set price for category</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modal_set_price">
+                                <div class="mb-3">
+                                    <label for="serv_id" class="form-label"><b>Service: </b></label>
+                                    <select class="form-select" aria-label="Service" name="service_id" id="service_id">
+                                        <option selected disabled>--Select Service--</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categ_id" class="form-label"><b>Category: </b></label>
+                                    <select class="form-select" aria-label="Category" name="categ_id" id="categ_id">
+                                        <option selected disabled>--Select Category--</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categ_price" class="form-label"><b>Price: </b></label>
+                                    <input type="number" class="form-control" id="categ_price" placeholder="Input price">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary"  id="saveChangesBtn">Save changes</button>
+                        </div>
+                        </div>
+                    </div>
+            </div>
 
             <div class="form-settings" id="mainForm">
                 <form class="form-container" id="settingsForm" method="POST">
                     <div class="row">
                         <div class="col">
-                            <label for="min_kilos"><b>Minimum Kilos:</b></label>
+                            <label for="service" class="form-label"><b>Service: </b></label>
+                            <select class="form-select" aria-label="Service" name="service" id="service">
+                                <option selected disabled>--Select Service--</option>
+                            </select>
+                        </div>
+                         <hr style="border: 1px solid #232946; margin: 8px 0">
+                    </div>
+                   
+
+                    <div class="row">
+                        <div class="col">
+                            <label for="min_kilos" class="form-label"><b>Minimum Kilos:</b></label>
                             <input type="number" class="form-control" id="min_kilos" name="min_kilos" value="<?php echo $minimum_kilos ?>">
+                        </div>
+
+                        <div class="col">
+                            <label for="rush_charge" class="form-label"><b>Rush Fee:</b></label>
+                            <input type="number" class="form-control" id="rush_charge" name="rush_charge" value="<?php echo $rush_charge ?>">
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col">
-                             <label for="delivery_date"><b>Delivery Period:</b></label>
-                            <input type="number" class="form-control" id="delivery_day" name="delivery_day" value="<?php echo $delivery_day ?>">
+                             <label for="delivery_date" class="form-label"><b>Delivery Period:</b></label>
+                            <input type="number" class="form-control" id="delivery_day" name="delivery_day" value="<?php echo $delivery_day?>">
                         </div>
 
                         <div class="col">
-                            <label for="rush_delivery_day"><b>Delivery Period for Rush:</b></label>
+                            <label for="rush_delivery_day" class="form-label"><b>Rush Delivery Period:</b></label>
                             <input type="number" class="form-control" id="rush_delivery_day" name="rush_delivery_day" value="<?php echo $rush_delivery_day?>">
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col">
-                            <label for="delivery_charge"><b>Delivery Fee: </b></label>
+                            <label for="delivery_charge" class="form-label"><b>Delivery Fee (outside Gaya-gaya): </b></label>
                             <input type="number" class="form-control" id="delivery_charge" name="delivery_charge" value="<?php echo $delivery_charge ?>">
                         </div>
 
                         <div class="col">
-                            <label for="rush_charge"><b>Rush Fee:</b></label>
-                            <input type="number" class="form-control" id="rush_charge" name="rush_charge" value="<?php echo $rush_charge ?>">
+                            <label for="gaya-gaya" class="form-label"><b>Delivery Fee (within Gaya-gaya): </b></label>
+                            <input type="number" class="form-control" id="d_fee_gaya" name="d_fee_gaya" 
+                                value="<?php echo $d_fee_gaya ?>">
                         </div>
                     </div>          
 
                     <button type="submit" class="btn btn-success" id="submit_btn" name="submit">Submit</button>
+                    
                 </form>
             </div>
 
             <script>
                 const form = document.getElementById('settingsForm');
 
+                //form submission
                 form.addEventListener('submit', function(event) {
-                    event.preventDefault(); 
+                    event.preventDefault(); //prevent the default form submission behavior
 
                     //collect form data
                     const formData = new FormData(form);
@@ -301,7 +365,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 1500
-                            });
+                            })
+                            .then(data => {
+                                location.reload();
+                            }); 
                         } else {
                             Swal.fire({
                                 title: 'Error!',
@@ -324,25 +391,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
             </script>
 
-            <div id="logoutModal" class="modal" style="display: none;">
+
+            <div id="logoutModal" class="modal" style="display:none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
                         <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
                         <button class="btn btn-no">No</button>
                     </div>
                 </div>
             </div>
-        </div> <!-- closing tag of main content -->
-    </div>
-</body>    
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-<script type="text/javascript" src="setting.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+         </div> <!--end of main -->
+    </div>
+
 </body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="setting.js"></script>
+
+</html>

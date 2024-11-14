@@ -1,11 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli('localhost', 'root', '', 'laundry_db');
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+require_once('customer_db.php');
 
 if(!isset($_SESSION['user_role'])) {
     header('location: /laundry_system/homepage/homepage.php');
@@ -18,49 +13,27 @@ if ($_SESSION['user_role'] !== 'admin') {
     header('location: /laundry_system/homepage/homepage.php');
     exit();
 } 
-
-$search = "";
-if(isset($_POST['search'])) {
-    $search = $con->real_escape_string($_POST['search']);
-    $query = "SELECT * FROM transaction WHERE customer_name LIKE '%$search%'
-    OR transaction_id LIKE '%$search%' 
-    OR laundry_service_option LIKE '%$search%' 
-    OR laundry_category_option LIKE '%$search%'";
-} else {
-    $query = "SELECT * FROM transaction";
-}
-
-$result = mysqli_query($conn, $query);
-
-if (!$result) {
-    die("Query error: " . mysqli_error($con));
-}
-
-//table
-$data = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
-}
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="transaction.css">
+    <title>Records - Customer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="customer.css">
 </head>
+
 <body>
     <div class="progress"></div>
+
     <div class="wrapper">
-    <aside id="sidebar">
+        <aside id="sidebar">
             <div class="d-flex">
                 <button id="toggle-btn" type="button">
                     <i class="bx bx-menu-alt-left"></i>
@@ -95,7 +68,7 @@ if ($result->num_rows > 0) {
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/records/records.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
                             <span>Records</span>
@@ -131,9 +104,9 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
 
-                    <?php if ($user_role === 'admin') : ?>
+                <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
-                        <a href="/laundry_system/settings/settings.php" class="sidebar-link">
+                        <a href="/laundry_system/settings/setting.php" class="sidebar-link">
                             <i class="lni lni-cog"></i>
                             <span>Settings</span>
                         </a>
@@ -167,74 +140,97 @@ if ($result->num_rows > 0) {
                         </ul>
                     </li>
                 <?php endif; ?>
-
             </ul>
 
             <div class="sidebar-footer">
-                <a href="#" id="btn_logout" class="sidebar-link">
+                <a href="javascript:void(0)" class="sidebar-link" id="btn_logout">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
-        
-        <!-------------MAIN CONTENT------------->
+
         <div class="main-content">
             <nav>
-                <div class="d-flex justify-content-between" id="navbar">
-                    <h1>Transaction</h1>
-
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1>Records</h1>
+                
                     <div class="search_bar" m-1>
-                        <input class="form-control" type="text" id="filter_transaction" placeholder="Search transaction...">
+                        <input class="form-control" type="text" id="filter_customer" placeholder="Search customers...">
                     </div>    
                 </div>
             </nav>
+
+            <div class="buttons">
+                <div class="customer_button">
+                   <a href="customer.php" class="button" id="customerBtn"><b>Customer</b></a>
+                </div>
+                
+                <div class="service_button">
+                    <a href="service.php" class="button" id="serviceBtn">Service</a>
+                </div>
+            
+                <div class="category_button">
+                    <a href="category.php" class="button" id="categoryBtn">Category</a>
+                </div>       
+            </div> <!-- buttons -->
 
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
                     <thead>
                         <tr class="bg-dark text-white">
-                            <th>Transaction ID</th>
+                            <th>Customer ID</th>
                             <th>Customer Name</th>
-                            <th>Customer Address</th>
-                            <th>Service Option Name</th>
-                            <th>Laundry Cycle</th>
-                            <th>Total Amount</th>
-                            <th>Delivery Fee</th>
-                            <th>Rush Fee</th>
-                            <th>Amount Tendered</th>
-                            <th>Change</th>
-                            <th>Actions</th>
+                            <th>Contact Number</th>
+                            <th>Province</th>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Barangay</th>
+                            <th>Archive</th>
                         </tr>
                     </thead>
-                    <tbody id="transaction_table">
+                    <tbody id = "customer_table">
+                       <?php
+                        $query = "SELECT * FROM customer";
+                        $result = mysqli_query($con, $query);
+
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $row['customer_id']; ?></td>
+                                <td><?php echo $row['customer_name']; ?></td>
+                                <td><?php echo $row['contact_number']; ?></td>
+                                <td><?php echo $row['province']; ?></td>
+                                <td><?php echo $row['city']; ?></td>
+                                <td><?php echo $row['address']; ?></td>
+                                <td><?php echo $row['brgy']; ?></td>
+                                <td>
+                                    <a href="javascript:void(0);" class="archive-btn" 
+                                        data-id="<?php echo $row['customer_id']; ?>" 
+                                        data-name="<?php echo $row['customer_name']; ?>"
+                                        data-contact="<?php echo $row['contact_number']; ?>"
+                                        data-contact="<?php echo $row['province']; ?>"
+                                        data-contact="<?php echo $row['city']; ?>"
+                                        data-address="<?php echo $row['address']; ?>"
+                                        data-contact="<?php echo $row['brgy']; ?>">
+                                        <i class='bx bxs-archive-in'></i>
+                                    </a>
+                                </td>
+                            </tr>
                         <?php
-                        if (!empty($data)) {
-                            foreach ($data as $row) {
-                                echo "<tr>";
-                                echo "<td>{$row['transaction_id']}</td>";
-                                echo "<td>{$row['customer_name']}</td>";
-                                echo "<td>{$row['customer_address']}</td>";
-                                echo "<td>{$row['service_option_name']}</td>";
-                                echo "<td>{$row['laundry_cycle']}</td>";
-                                echo "<td>{$row['total_amount']}</td>";
-                                echo "<td>{$row['delivery_fee']}</td>";
-                                echo "<td>{$row['rush_fee']}</td>";
-                                echo "<td>{$row['amount_tendered']}</td>";
-                                echo "<td>{$row['money_change']}</td>";
-                                echo "<td>
-                                    <a href='javascript:void(0);' class='archive-btn' data-id='{$row['customer_id']}'>
-                                    <i class='bx bxs-archive-in'></i></a>
-                                </td>";
-                                echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='11'>No transactions found.</td></tr>";
-                        }
                         ?>
+                    <tr>
+                        <td colspan="5">No customer found.</td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
                     </tbody>
                 </table>
-            </div>
+            </div> <!-- table container -->
 
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center" id="pagination">
@@ -262,7 +258,7 @@ if ($result->num_rows > 0) {
             <div id="logoutModal" class="modal" style="display: none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2 id="logoutText">Do you want to logout?</h2>
+                    <h2>Do you want to logout?</h2>
                     <div class="modal-buttons">
                         <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
                         <button class="btn btn-no">No</button>
@@ -270,11 +266,20 @@ if ($result->num_rows > 0) {
                 </div>
             </div>
 
-        </div> <!-- closing tag of main content -->
-    </div>
+        </div> <!--main content-->
+    </div> <!-- wrapper -->
+
 </body>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="transaction.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<script type="text/javascript" src="customer.js"></script>
+
 
 </html>
+<?php
+$con->close();
+?>

@@ -158,7 +158,7 @@ $user_role = $_SESSION['user_role'];
 
         <div class="main-content">
             <nav>
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between" id="navbar">
                     <h1>Archived Users</h1>
 
                     <div class="search_bar" m-1>

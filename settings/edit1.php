@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Configuration of Wash/Dry/Fold</title>
+    <title>Settings - Rate Configuration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
@@ -69,7 +69,7 @@
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="/laundry_system/records/customer.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
                             <span>Records</span>
@@ -107,7 +107,7 @@
 
                 <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
-                        <a href="/laundry_system/settings/setting.php" class="sidebar-link">
+                        <a href="/laundry_system/settings/settings.php" class="sidebar-link">
                             <i class="lni lni-cog"></i>
                             <span>Settings</span>
                         </a>
@@ -116,29 +116,10 @@
                     <hr style="border: 1px solid #b8c1ec; margin: 8px">
 
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#archived" aria-expanded="false" aria-controls="archived">
+                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
                             <i class='bx bxs-archive-in'></i>
-                            <span>Archived</span>
+                            <span class="nav-item">Archived</span>
                         </a>
-
-                        <ul id="archived" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">Archived Users</a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="/laundry_system/archived/archive_customer.php" class="sidebar-link">Archived Customer</a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="/laundry_system/archived/archive_service.php" class="sidebar-link">Archived Service</a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a href="/laundry_system/archived/archive_category.php" class="sidebar-link">Archived Category</a>
-                            </li>
-                        </ul>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -159,7 +140,42 @@
                 </div>
 
                 <div class="text" style="text-align: center;" name="category">
-                    <h2>Update Price</h2>
+                    <?php
+                    $serviceName = '';
+
+                    if (isset($_GET['service_id'])) {
+                        $serviceId = $_GET['service_id'];
+
+                        $conn = new mysqli('localhost', 'root', '', 'laundry_db');
+
+                        if ($conn->connect_error) {
+                            die("Connection failed: " . $conn->connect_error);
+                        }
+
+                        // Fetch the service name
+                        $serviceSql = "SELECT laundry_service_option FROM service WHERE service_id = ?";
+                        $serviceStmt = $conn->prepare($serviceSql);
+                        $serviceStmt->bind_param('i', $serviceId);
+                        $serviceStmt->execute();
+                        $serviceResult = $serviceStmt->get_result();
+
+                        if ($serviceRow = $serviceResult->fetch_assoc()) {
+                            $serviceName = $serviceRow['laundry_service_option'];
+                        }
+
+                        // Continue with your existing query
+                        $sql = "SELECT * FROM service_category_price scp
+                                JOIN category c ON scp.category_id = c.category_id 
+                                JOIN service s ON scp.service_id = s.service_id 
+                                WHERE s.service_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param('i', $serviceId);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                    }
+                    ?>
+
+                    <h2><?php echo ($serviceName); ?> - Update Price</h2>
                 </div>
             </nav>
 
@@ -173,42 +189,27 @@
                         <th scope="col">Edit</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> 
                     <?php
-                    $conn = new mysqli('localhost', 'root', '', 'laundry_db');
-
-                    if ($conn->connect_error) {
-                       die("Connection failed: " . $conn->connect_error);
-                    }
-
-                    $sql = "SELECT c.laundry_category_option, s.laundry_service_option, scp.price, scp.category_id, s.service_id
-                            FROM service_category_price scp
-                            JOIN service s ON scp.service_id = s.service_id
-                            JOIN category c ON scp.category_id = c.category_id
-                            WHERE scp.service_id = 1";
-
-                    $result = mysqli_query($conn, $sql);
-                    if (!$result) {
-                        die("Query Failed: " . mysqli_error($conn));
-                    }
-
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        ?>
-                            <tr>
-                                <td><?php echo $row["laundry_category_option"]; ?></td>
-                                <td><?php echo $row["laundry_service_option"]; ?></td>
-                                <td><?php echo $row["price"]; ?></td>
-                                <td>
-                                      <a href="javascript:void(0);" class="edit-btn" 
-                                        data-id="<?php echo $row['service_id']; ?>" 
-                                        data-option="<?php echo $row['laundry_category_option']; ?>"
-                                        data-price="<?php echo  $row['price']; ?>"
-                                        data-category-id="<?php echo $row['category_id']; ?>">
-                                        <i class="bx bxs-edit"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php
+                       if (isset($result)) {
+                        while ($row = $result->fetch_assoc()) {
+                            ?>
+                                <tr>
+                                    <td><?php echo ($row["laundry_category_option"]); ?></td>
+                                    <td><?php echo ($row["laundry_service_option"]); ?></td>
+                                    <td><?php echo ($row["price"]); ?></td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="edit-btn" 
+                                            data-id="<?php echo ($row['service_id']); ?>" 
+                                            data-option="<?php echo ($row['laundry_category_option']); ?>"
+                                            data-price="<?php echo ($row['price']); ?>"
+                                            data-category-id="<?php echo ($row['category_id']); ?>">
+                                            <i class="bx bxs-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php
+                        }
                     }
                     ?>
                     </tbody>
@@ -249,13 +250,13 @@
                 </form>    
             </div> 
 
-            <div id="logoutModal" class="modal" style="display: none;">
+            <div id="logoutModal" class="modal" style="display:none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
-                        <a href="/laundry_system/homepage/logout.php" class="btns btn-yes">Yes</a>
-                        <button class="btns btn-no">No</button>
+                        <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
+                        <button class="btn btn-no">No</button>
                     </div>
                 </div>
             </div>

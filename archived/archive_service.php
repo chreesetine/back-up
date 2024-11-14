@@ -157,7 +157,7 @@ $user_role = $_SESSION['user_role'];
 
         <div class="main-content">
             <nav>
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between" id="navbar">
                     <h1>Archived Service</h1>
 
                     <div class="search_bar" m-1>
@@ -185,7 +185,7 @@ $user_role = $_SESSION['user_role'];
             </div>
 
             <!-- table -->
-            <div class="card-body">
+            <div class="table-responsive">
                 <table class="table table-bordered text-center">
                         <thead>
                             <tr class="bg-dark text-white">

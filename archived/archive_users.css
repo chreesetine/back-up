@@ -195,7 +195,40 @@ a.sidebar-link:hover {
 
 /* table */
 .table-responsive {
-  padding: 20px;
+  padding: 20px 0;
+} 
+
+/*responsiveness */
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.9rem;
+  }
+
+  #navbar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button {
+    width: 300px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table {
+    font-size: 0.8rem;
+  }
+  
+  #navbar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button {
+    width: 265px;
+    font-size: 18px;
+  }
 } 
 
 /* anchor tag button */
@@ -213,7 +246,7 @@ a.sidebar-link:hover {
   align-items: center; 
   justify-content: center;
   height: 60px;
-  width: 155px;
+  /* width: 155px; */
   padding: 15px 25px;
   background-color: #b8c1ec;
   color: #000;
@@ -232,7 +265,7 @@ a.sidebar-link:hover {
   cursor: pointer;
 }
 
-/* pagination */
+/* pagination 
 .pagination {
   display: flex;
   justify-content: center;
@@ -267,7 +300,7 @@ a.sidebar-link:hover {
 .pagination .page-link:hover {
   background-color: #f1f1f1;
   color: #007bff;
-}
+} */
 
 /* search bar */
 .search_bar {
