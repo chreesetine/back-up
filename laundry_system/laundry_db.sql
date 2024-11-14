@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 03:27 PM
+-- Generation Time: Nov 12, 2024 at 11:30 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -53,7 +53,10 @@ CREATE TABLE `archived_customers` (
   `customer_id` int(11) NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `contact_number` varchar(20) NOT NULL,
+  `province` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
+  `brgy` varchar(255) NOT NULL,
   `archived_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -61,23 +64,23 @@ CREATE TABLE `archived_customers` (
 -- Dumping data for table `archived_customers`
 --
 
-INSERT INTO `archived_customers` (`archive_id`, `customer_id`, `customer_name`, `contact_number`, `address`, `archived_at`) VALUES
-(3, 22, 'vanilla', '23456645654', 'sjdm', '2024-09-16 16:17:34'),
-(4, 23, 'ming', '34567654321', 'sjdm', '2024-09-16 16:34:10'),
-(5, 28, 'frf', '34567897654', 'ggg', '2024-10-02 10:53:58'),
-(6, 33, 'nitnit lomi', '80000888888', '', '2024-10-02 10:54:12'),
-(7, 34, 'nitnit lomi', '70000000000', '', '2024-10-02 10:54:17'),
-(8, 27, 'milky', '33325253252', 'quezon city', '2024-11-01 15:27:42'),
-(9, 24, 'christine', '09997852239', 'laguna', '2024-11-01 15:29:05'),
-(10, 36, 'Christinee', '09951273842', 'SJDM', '2024-11-01 16:12:12'),
-(11, 29, 'denise', '22220000000', '', '2024-11-01 16:55:31'),
-(12, 26, 'winnie', '53459876574', 'ctvl', '2024-11-02 08:04:34'),
-(13, 31, 'nitinit', '50000000000', '', '2024-11-02 11:26:10'),
-(14, 51, 'Minnie', '23456432456', '', '2024-11-06 07:31:28'),
-(15, 42, 'Kristine', '65644564564', 'Isabela Road', '2024-11-06 07:32:01'),
-(16, 43, 'Milton', '74747444445', '', '2024-11-06 07:34:22'),
-(17, 50, 'Mickey', '23455643535', '', '2024-11-06 07:43:35'),
-(18, 49, 'Gwen', '42343435345', 'sjdm', '2024-11-06 07:45:06');
+INSERT INTO `archived_customers` (`archive_id`, `customer_id`, `customer_name`, `contact_number`, `province`, `city`, `address`, `brgy`, `archived_at`) VALUES
+(3, 22, 'vanilla', '23456645654', '', '', 'sjdm', '', '2024-09-16 16:17:34'),
+(4, 23, 'ming', '34567654321', '', '', 'sjdm', '', '2024-09-16 16:34:10'),
+(5, 28, 'frf', '34567897654', '', '', 'ggg', '', '2024-10-02 10:53:58'),
+(6, 33, 'nitnit lomi', '80000888888', '', '', '', '', '2024-10-02 10:54:12'),
+(7, 34, 'nitnit lomi', '70000000000', '', '', '', '', '2024-10-02 10:54:17'),
+(8, 27, 'milky', '33325253252', '', '', 'quezon city', '', '2024-11-01 15:27:42'),
+(9, 24, 'christine', '09997852239', '', '', 'laguna', '', '2024-11-01 15:29:05'),
+(10, 36, 'Christinee', '09951273842', '', '', 'SJDM', '', '2024-11-01 16:12:12'),
+(11, 29, 'denise', '22220000000', '', '', '', '', '2024-11-01 16:55:31'),
+(12, 26, 'winnie', '53459876574', '', '', 'ctvl', '', '2024-11-02 08:04:34'),
+(13, 31, 'nitinit', '50000000000', '', '', '', '', '2024-11-02 11:26:10'),
+(14, 51, 'Minnie', '23456432456', '', '', '', '', '2024-11-06 07:31:28'),
+(15, 42, 'Kristine', '65644564564', '', '', 'Isabela Road', '', '2024-11-06 07:32:01'),
+(16, 43, 'Milton', '74747444445', '', '', '', '', '2024-11-06 07:34:22'),
+(17, 50, 'Mickey', '23455643535', '', '', '', '', '2024-11-06 07:43:35'),
+(18, 49, 'Gwen', '42343435345', '', '', 'sjdm', '', '2024-11-06 07:45:06');
 
 -- --------------------------------------------------------
 
@@ -98,7 +101,8 @@ CREATE TABLE `archived_service` (
 
 INSERT INTO `archived_service` (`archive_id`, `service_id`, `laundry_service_option`, `archived_at`) VALUES
 (1, 5, 'Dry only', '2024-09-16 17:24:16'),
-(2, 4, 'Wash only', '2024-09-18 10:47:12');
+(2, 4, 'Wash only', '2024-09-18 10:47:12'),
+(3, 7, 'Shoe clean', '2024-11-12 07:27:59');
 
 -- --------------------------------------------------------
 
@@ -164,31 +168,57 @@ CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `contact_number` varchar(20) NOT NULL,
-  `address` varchar(255) NOT NULL
+  `province` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `brgy` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_number`, `address`) VALUES
-(19, 'tin', '87654367890', 'sjdm'),
-(30, 'nitnit', '00999999999', ''),
-(32, 'roi', '80000000000', ''),
-(35, 'christine', '82828228288', ''),
-(37, 'Idowl', '09123457899', ''),
-(38, 'Hatig', '09123456789', ''),
-(39, 'Dil', '09123456788', ''),
-(40, 'Dil', '09122222222', ''),
-(41, 'Liam ', '44444444444', 'Argentina'),
-(44, 'Kristine', '43442424234', ''),
-(45, 'Kristine', '43535345334', ''),
-(46, 'Kristine', '34343324423', ''),
-(47, 'Kristine', '23456576876', ''),
-(48, 'Cristine', '11111111111', 'SJDM'),
-(52, 'Pink Sweat', '22222222222', 'Cypress'),
-(53, 'adi', '90000000000', ''),
-(54, 'tobi', '88888888888', 'verde green');
+INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_number`, `province`, `city`, `address`, `brgy`) VALUES
+(19, 'tin', '87654367890', '', '', 'sjdm', ''),
+(30, 'nitnit', '00999999999', '', '', '', ''),
+(32, 'roi', '80000000000', '', '', '', ''),
+(35, 'christine', '82828228288', '', '', '', ''),
+(37, 'Idowl', '09123457899', '', '', '', ''),
+(38, 'Hatig', '09123456789', '', '', '', ''),
+(41, 'Liam ', '44444444444', '', '', 'Argentina', ''),
+(44, 'Kristine', '43442424234', '', '', '', ''),
+(45, 'Kristine', '43535345334', '', '', '', ''),
+(46, 'Kristine', '34343324423', '', '', '', ''),
+(47, 'Kristine', '23456576876', '', '', '', ''),
+(48, 'Cristine', '11111111111', '', '', 'SJDM', ''),
+(52, 'Pink Sweat', '22222222222', '', '', 'Cypress', ''),
+(53, 'adi', '90000000000', '', '', '', ''),
+(54, 'tobi', '88888888888', '', '', 'verde green', ''),
+(55, 'tiiin', '89687998787', '', '', 'sjdm', ''),
+(56, 'pedro', '00000000000', '', '', 'sjdm', ''),
+(57, 'tintin', '09320902894', '', '', '', ''),
+(58, 'mingming', '23456786543', '', '', '', ''),
+(59, 'milky', '34567890876', '', '', 'blk 2 lot 16', ''),
+(60, 'Winnie', '56789032222', '', '', '', ''),
+(61, 'Chito', '24356756434', '', '', '', ''),
+(62, 'chitoo', '28343734890', '', '', 'Block 2 Lot 8, Towerville subd.', ''),
+(63, 'chitoo', '98976578902', '', '', '', ''),
+(64, 'Charlize', '34567843544', '', '', 'blk 3 lot 6 skyline', ''),
+(65, 'Mika Ela', '87272984390', '', '', '', ''),
+(66, 'Pearl Magbanua', '35534657643', '', '', 'blk 3 lot 6 skyline', ''),
+(67, 'denise v', '09555555555', '', '', '', ''),
+(68, 'den', '99999999999', '', '', '', ''),
+(69, 'fht', '54657877777', '', '', '', ''),
+(70, 'Muning Dela Cruz', '09876890876', '', '', '', ''),
+(71, 'Muning Dela Cruz', '09876789034', '', '', '', ''),
+(72, 'Mingming', '35464765874', '', '', '', ''),
+(73, 'Tintin Magbanua', '09404304930', '', '', 'Citiville', ''),
+(74, 'Melanie ', '09876578909', '', '', 'Heaven subd', ''),
+(75, 'hello', '98765667890', '', '', 'sarmiento', ''),
+(76, 'Danielle', '09997657897', '', '', '', ''),
+(77, 'Dani DC', '09567890876', '', '', 'Orange', ''),
+(78, 'Mung Go', '09534534643', '', '', '', ''),
+(79, 'juju beat', '09173627362', '', '', 'verde green 888', '');
 
 -- --------------------------------------------------------
 
@@ -208,7 +238,8 @@ CREATE TABLE `service` (
 INSERT INTO `service` (`service_id`, `laundry_service_option`) VALUES
 (1, 'Wash/Dry/Fold'),
 (2, 'Wash/Dry/Press'),
-(3, 'Dry only');
+(3, 'Dry only'),
+(6, 'Wash only');
 
 -- --------------------------------------------------------
 
@@ -276,7 +307,8 @@ CREATE TABLE `service_option_price` (
 
 INSERT INTO `service_option_price` (`option_price_id`, `option_id`, `service_option_type`, `price`) VALUES
 (1, 1, 'Delivery', '50.00'),
-(3, 3, 'Rush', '50.00');
+(3, 3, 'Rush', '50.00'),
+(4, 4, 'Delivery gg', '25.00');
 
 -- --------------------------------------------------------
 
@@ -347,7 +379,34 @@ INSERT INTO `service_request` (`request_id`, `customer_id`, `customer_order_id`,
 (40, 51, 'ord_6721e3af8bea7', 'Minnie', '23456432456', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 5, '7.00', '35.00', '0000-00-00', '2024-10-30', '15:43:43', 'active'),
 (41, 52, 'ord_672b3071a4042', 'Pink Sweat', '22222222222', 1, 'Wash/Dry/Fold', 3, 'Comforter/Bath towel\r\n', 6, '6.00', '55.00', '2024-11-07', '2024-11-06', '17:01:37', 'completed'),
 (42, 53, 'ord_672b31f279e58', 'adi', '90000000000', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 1, '5.00', '35.00', '2024-11-09', '2024-11-06', '17:08:02', 'completed'),
-(43, 54, 'ord_672b32751a9f9', 'tobi', '88888888888', 1, 'Wash/Dry/Fold', 3, 'Comforter/Bath towel\r\n', 1, '7.00', '55.00', '2024-11-07', '2024-11-06', '17:10:13', 'completed');
+(43, 54, 'ord_672b32751a9f9', 'tobi', '88888888888', 1, 'Wash/Dry/Fold', 3, 'Comforter/Bath towel\r\n', 1, '7.00', '55.00', '2024-11-07', '2024-11-06', '17:10:13', 'completed'),
+(44, 55, 'ord_672dbb38a8fb1', 'tiiin', '89687998787', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 4, '7.00', '35.00', '2024-11-12', '2024-11-08', '15:18:16', 'completed'),
+(45, 55, 'ord_672dbb38a8fb1', 'tiiin', '89687998787', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 2, '6.00', '100.00', '2024-11-12', '2024-11-08', '15:18:16', 'completed'),
+(46, 56, 'ord_672dd6472ea5d', 'pedro', '00000000000', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 3, '8.00', '45.00', '2024-11-09', '2024-11-08', '17:13:43', 'completed'),
+(47, 56, 'ord_672dd6472ea5d', 'pedro', '00000000000', 3, 'Dry only', 3, 'Comforter/Bath towel\r\n', 3, '6.00', '55.00', '2024-11-09', '2024-11-08', '17:13:43', 'completed'),
+(48, 57, 'ord_672f38fc2e483', 'tintin', '09320902894', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 4, '9.00', '100.00', '0000-00-00', '2024-11-09', '18:27:08', 'active'),
+(49, 58, 'ord_672f3c1850cc0', 'mingming', '23456786543', 6, 'Wash only', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '5.00', '100.00', '0000-00-00', '2024-11-09', '18:40:24', 'cancelled'),
+(50, 59, 'ord_672f4043e6294', 'milky', '34567890876', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 3, '8.00', '80.00', '2024-11-15', '2024-11-09', '18:58:11', 'completed'),
+(51, 60, 'ord_672f410c333f7', 'Winnie', '56789032222', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 5, '8.00', '46.00', '0000-00-00', '2024-11-09', '19:01:32', 'active'),
+(52, 62, 'ord_672f426e18668', 'chitoo', '28343734890', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 5, '7.00', '35.00', '2024-11-12', '2024-11-09', '19:07:26', 'completed'),
+(53, 62, 'ord_672f4380e7331', 'chitoo', '98976578902', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 5, '7.00', '35.00', '2024-11-12', '2024-11-09', '19:12:00', 'completed'),
+(54, 64, 'ord_672f6ed480954', 'Charlize', '34567843544', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 5, '6.00', '80.00', '2024-11-12', '2024-11-09', '22:16:52', 'completed'),
+(55, 65, 'ord_672f70083d3bd', 'Mika Ela', '87272984390', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '8.00', '46.00', '0000-00-00', '2024-11-09', '22:22:00', 'active'),
+(56, 65, 'ord_672f70083d3bd', 'Mika Ela', '87272984390', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 6, '8.00', '35.00', '0000-00-00', '2024-11-09', '22:22:00', 'active'),
+(57, 66, 'ord_672f98b5e2da3', 'Pearl Magbanua', '35534657643', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 5, '5.00', '80.00', '2024-11-13', '2024-11-10', '01:15:33', 'completed'),
+(58, 67, 'ord_6731ba6911d9a', 'denise v', '09555555555', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 2, '6.00', '35.00', '0000-00-00', '2024-11-11', '16:03:53', 'cancelled'),
+(59, 68, 'ord_6731bb7f5cad9', 'den', '99999999999', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 1, '6.00', '45.00', '2024-11-12', '2024-11-11', '16:08:31', 'completed'),
+(60, 69, 'ord_6731bd39a8a32', 'fht', '54657877777', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 3, '7.00', '100.00', '0000-00-00', '2024-11-11', '16:15:53', 'cancelled'),
+(61, 70, 'ord_6731bf9a8cbf2', 'Muning Dela Cruz', '09876890876', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 6, '8.00', '35.00', '0000-00-00', '2024-11-11', '16:26:02', 'active'),
+(62, 70, 'ord_6731c052011b7', 'Muning Dela Cruz', '09876789034', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '7.00', '100.00', '0000-00-00', '2024-11-11', '16:29:06', 'active'),
+(63, 58, 'ord_6731c11d514c2', 'Mingming', '35464765874', 3, 'Dry only', 3, 'Comforter/Bath towel\r\n', 8, '7.00', '55.00', '0000-00-00', '2024-11-11', '16:32:29', 'active'),
+(64, 58, 'ord_6731c1e246296', 'Mingming', '35464765874', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 10, '8.00', '80.00', '0000-00-00', '2024-11-11', '16:35:46', 'active'),
+(65, 73, 'ord_67321ccaec306', 'Tintin Magbanua', '09404304930', 3, 'Dry only', 1, 'Clothes/Table Napkins/Pillowcase', 4, '5.00', '35.00', '2024-11-14', '2024-11-11', '23:03:38', 'completed'),
+(66, 74, 'ord_67322c125dc2a', 'Melanie ', '09876578909', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '8.00', '35.00', '2024-11-12', '2024-11-12', '00:08:50', 'completed'),
+(67, 75, 'ord_6732ea827f837', 'hello', '98765667890', 0, '--Select Service--', 1, 'Clothes/Table Napkins/Pillowcase', 8, '8.00', '35.00', '2024-11-13', '2024-11-12', '13:41:22', 'completed'),
+(68, 77, 'ord_6733172f30393', 'Dani DC', '09567890876', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '8.00', '45.00', '2024-11-15', '2024-11-12', '16:51:59', 'completed'),
+(69, 78, 'ord_67331cbc7ec9f', 'Mung Go', '09534534643', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 7, '8.00', '100.00', '0000-00-00', '2024-11-12', '17:15:40', 'cancelled'),
+(70, 79, 'ord_6733282bdee4a', 'juju beat', '09173627362', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 1, '8.00', '45.00', '2024-11-15', '2024-11-12', '18:04:27', 'completed');
 
 -- --------------------------------------------------------
 
@@ -381,10 +440,13 @@ CREATE TABLE `transaction` (
   `request_id` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `customer_name` varchar(30) DEFAULT NULL,
+  `province` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
   `customer_address` varchar(50) NOT NULL,
+  `brgy` varchar(255) NOT NULL,
   `service_option_id` int(100) NOT NULL,
   `service_option_name` varchar(50) NOT NULL,
-  `laundry_cycle` enum('standard','rush') NOT NULL,
+  `laundry_cycle` enum('Standard','Rush') NOT NULL,
   `total_amount` decimal(65,2) DEFAULT NULL,
   `delivery_fee` decimal(65,2) DEFAULT NULL,
   `rush_fee` decimal(65,2) DEFAULT NULL,
@@ -396,33 +458,48 @@ CREATE TABLE `transaction` (
 -- Dumping data for table `transaction`
 --
 
-INSERT INTO `transaction` (`transaction_id`, `request_id`, `customer_id`, `customer_name`, `customer_address`, `service_option_id`, `service_option_name`, `laundry_cycle`, `total_amount`, `delivery_fee`, `rush_fee`, `amount_tendered`, `money_change`) VALUES
-(5, 9, 24, 'christine', '', 1, 'Delivery', 'rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
-(6, 10, 24, 'christine', '', 1, 'Delivery', 'rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
-(7, 11, 25, 'tintin', '', 1, 'Delivery', 'rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
-(8, 12, 25, 'tintin', '', 1, 'Delivery', 'rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
-(9, 13, 26, 'winnie', '', 1, 'Delivery', 'rush', '405.00', '50.00', '25.00', '420.00', '15.00'),
-(10, 14, 27, 'milky', '', 1, 'Delivery', 'standard', '650.00', '50.00', '0.00', '700.00', '50.00'),
-(11, 18, 29, 'denise', '', 1, 'Delivery', 'rush', '350.00', '50.00', '25.00', '500.00', '150.00'),
-(12, 21, 31, 'nitinit', '', 1, 'Delivery', 'rush', '405.00', '50.00', '25.00', '500.00', '95.00'),
-(13, 22, 18, 'roi', '', 1, 'Delivery', 'standard', '750.00', '50.00', '0.00', '800.00', '50.00'),
-(14, 24, 33, 'nitnit lomi', '', 2, 'Customer Pick-Up', 'rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
-(15, 25, 33, 'nitnit lomi', '', 2, 'Customer Pick-Up', 'rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
-(16, 26, 24, 'christine', 'laguna', 1, 'Delivery', 'rush', '775.00', '50.00', '25.00', '800.00', '25.00'),
-(17, 27, 36, 'Christinee', 'SJDM', 1, 'Delivery', 'rush', '595.00', '50.00', '25.00', '600.00', '5.00'),
-(18, 29, 41, 'Liam ', 'Argentina', 1, 'Delivery', 'rush', '625.00', '50.00', '25.00', '700.00', '75.00'),
-(19, 30, 42, 'Kristine', 'Isabela', 2, 'Customer Pick-Up', 'standard', '350.00', '0.00', '0.00', '500.00', '150.00'),
-(20, 31, 42, 'Kristine', 'Isabela', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(21, 32, 42, 'Kristine', 'Isabela', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(22, 33, 42, 'Kristine', 'Isabela', 1, 'Delivery', 'rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
-(23, 34, 42, 'Kristine', 'Isabela Road', 1, 'Delivery', 'rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
-(24, 35, 42, 'Kristine', 'Isabela Road', 1, 'Delivery', 'rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
-(25, 36, 48, 'Cristine', 'SJDM', 1, 'Delivery', 'rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
-(26, 37, 48, 'Cristine', 'SJDM', 1, 'Delivery', 'rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
-(27, 38, 49, 'Gwen', 'sjdm', 1, 'Delivery', 'rush', '675.00', '50.00', '25.00', '700.00', '25.00'),
-(28, 41, 52, 'Pink Sweat', 'Cypress', 2, 'Customer Pick-Up', 'rush', '380.00', '0.00', '50.00', '400.00', '20.00'),
-(29, 42, 53, 'adi', '', 2, 'Customer Pick-Up', 'standard', '175.00', '0.00', '0.00', '500.00', '325.00'),
-(30, 43, 54, 'tobi', 'verde green', 1, 'Delivery', 'rush', '485.00', '50.00', '50.00', '500.00', '15.00');
+INSERT INTO `transaction` (`transaction_id`, `request_id`, `customer_id`, `customer_name`, `province`, `city`, `customer_address`, `brgy`, `service_option_id`, `service_option_name`, `laundry_cycle`, `total_amount`, `delivery_fee`, `rush_fee`, `amount_tendered`, `money_change`) VALUES
+(5, 9, 24, 'christine', '', '', '', '', 1, 'Delivery', 'Rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
+(6, 10, 24, 'christine', '', '', '', '', 1, 'Delivery', 'Rush', '460.00', '50.00', '25.00', '500.00', '40.00'),
+(7, 11, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'Rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
+(8, 12, 25, 'tintin', '', '', '', '', 1, 'Delivery', 'Rush', '580.00', '50.00', '25.00', '600.00', '20.00'),
+(9, 13, 26, 'winnie', '', '', '', '', 1, 'Delivery', 'Rush', '405.00', '50.00', '25.00', '420.00', '15.00'),
+(10, 14, 27, 'milky', '', '', '', '', 1, 'Delivery', 'Standard', '650.00', '50.00', '0.00', '700.00', '50.00'),
+(11, 18, 29, 'denise', '', '', '', '', 1, 'Delivery', 'Rush', '350.00', '50.00', '25.00', '500.00', '150.00'),
+(12, 21, 31, 'nitinit', '', '', '', '', 1, 'Delivery', 'Rush', '405.00', '50.00', '25.00', '500.00', '95.00'),
+(13, 22, 18, 'roi', '', '', '', '', 1, 'Delivery', 'Standard', '750.00', '50.00', '0.00', '800.00', '50.00'),
+(14, 24, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
+(15, 25, 33, 'nitnit lomi', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '715.00', '0.00', '25.00', '1000.00', '285.00'),
+(16, 26, 24, 'christine', '', '', 'laguna', '', 1, 'Delivery', 'Rush', '775.00', '50.00', '25.00', '800.00', '25.00'),
+(17, 27, 36, 'Christinee', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '595.00', '50.00', '25.00', '600.00', '5.00'),
+(18, 29, 41, 'Liam ', '', '', 'Argentina', '', 1, 'Delivery', 'Rush', '625.00', '50.00', '25.00', '700.00', '75.00'),
+(19, 30, 42, 'Kristine', '', '', 'Isabela', '', 2, 'Customer Pick-Up', 'Standard', '350.00', '0.00', '0.00', '500.00', '150.00'),
+(20, 31, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(21, 32, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(22, 33, 42, 'Kristine', '', '', 'Isabela', '', 1, 'Delivery', 'Rush', '1575.00', '50.00', '25.00', '1600.00', '25.00'),
+(23, 34, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'Rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
+(24, 35, 42, 'Kristine', '', '', 'Isabela Road', '', 1, 'Delivery', 'Rush', '250.00', '50.00', '25.00', '300.00', '50.00'),
+(25, 36, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
+(26, 37, 48, 'Cristine', '', '', 'SJDM', '', 1, 'Delivery', 'Rush', '850.00', '50.00', '25.00', '1000.00', '150.00'),
+(27, 38, 49, 'Gwen', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '675.00', '50.00', '25.00', '700.00', '25.00'),
+(28, 41, 52, 'Pink Sweat', '', '', 'Cypress', '', 2, 'Customer Pick-Up', 'Rush', '380.00', '0.00', '50.00', '400.00', '20.00'),
+(29, 42, 53, 'adi', '', '', '', '', 2, 'Customer Pick-Up', 'Standard', '175.00', '0.00', '0.00', '500.00', '325.00'),
+(30, 43, 54, 'tobi', '', '', 'verde green', '', 1, 'Delivery', 'Rush', '485.00', '50.00', '50.00', '500.00', '15.00'),
+(31, 44, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
+(32, 45, 55, 'tiiin', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '945.00', '50.00', '50.00', '1000.00', '55.00'),
+(33, 46, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
+(34, 47, 56, 'pedro', '', '', 'sjdm', '', 1, 'Delivery', 'Rush', '790.00', '50.00', '50.00', '1000.00', '210.00'),
+(35, 50, 59, 'milky', '', '', 'blk 2 lot 16', '', 1, 'Delivery', 'Standard', '690.00', '50.00', '0.00', '1000.00', '310.00'),
+(36, 52, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'Standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
+(37, 53, 62, 'chitoo', '', '', 'Block 2 Lot 8, Towerville subd.', '', 1, 'Delivery', 'Standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
+(38, 54, 64, 'Charlize', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'Standard', '530.00', '50.00', '0.00', '600.00', '70.00'),
+(39, 57, 66, 'Pearl Magbanua', '', '', 'blk 3 lot 6 skyline', '', 1, 'Delivery', 'Standard', '450.00', '50.00', '0.00', '500.00', '50.00'),
+(40, 59, 68, 'den', '', '', '', '', 2, 'Customer Pick-Up', 'Rush', '320.00', '0.00', '50.00', '500.00', '180.00'),
+(41, 65, 73, 'Tintin Magbanua', '', '', 'Citiville', '', 1, 'Delivery', 'Standard', '225.00', '50.00', '0.00', '1000.00', '775.00'),
+(42, 66, 74, 'Melanie ', '', '', 'Heaven subd', '', 1, 'Delivery', 'Rush', '380.00', '50.00', '50.00', '500.00', '120.00'),
+(43, 67, 75, 'hello', '', '', 'sarmiento', '', 0, '--Select Option--', 'Rush', '330.00', '0.00', '50.00', '500.00', '170.00'),
+(44, 68, 77, 'Dani DC', '', '', 'Orange', '', 2, 'Customer Pick-Up', 'Standard', '360.00', '0.00', '0.00', '500.00', '140.00'),
+(45, 70, 79, 'juju beat', '', '', 'verde green 888', '', 1, 'Delivery', 'Standard', '410.00', '50.00', '0.00', '500.00', '90.00');
 
 -- --------------------------------------------------------
 
@@ -456,8 +533,10 @@ INSERT INTO `user` (`user_id`, `username`, `first_name`, `last_name`, `user_role
 (64, 'Ariana Butera', 'Ariana', 'Butera', 'staff', '$2y$10$MIiAilu.k73bYBiczjgzpep3XVNvcGPN6AypViZdp3si4rW5sxhjC', '2024-10-05 22:43:51', 'Active', '', '', '2024-10-05 22:43:51'),
 (65, 'mkyg', 'milky', 'grande', 'admin', '$2y$10$vAUCI6A//eF5N1r5cHoX..iueBMkB46Hj0YCh8342r8l1TxlihNim', '2024-10-24 01:17:56', 'Active', '', '', '2024-10-24 01:17:56'),
 (66, 'Tintin', 'Christine', 'Haduca', 'admin', '$2y$10$rqzvpRcGxQCSplwxULjIAe0CYQ1EtfN82W0bUpGZnjUq5aWYhvn4W', '2024-11-03 22:28:15', 'Active', '', '', '2024-11-03 22:28:15'),
-(67, 'Tin', 'Tin', 'Hdc', 'admin', '$2y$10$v.l8WiZvkl6Xe5KVNiHttuV6JDwv4hg4I8lbsR9xfKrz0ETr54Pny', '2024-11-06 16:40:52', 'Active', 'What year were you born?', '$2y$10$4mbziMKzzuyNqOmLZMGnIOE14hGHbSWI2/4xx7Qi7lu2TNH8pMSCy', '2024-11-06 16:40:52'),
-(72, 'villa00', 'denise', 'villa', 'admin', '$2y$10$vLd7qrRDxGoiSYEU3jZydeUJq01BvkSCS7NBcgDNp3g.JV82srEw6', '2024-11-06 16:55:45', 'Active', 'In what province were you born?', '$2y$10$rq0dCpsf6oJ8GhGz3ujwyu0Bq1lNb9l5jmeaBMUM229nE4EXZE3yi', '2024-11-06 16:55:45');
+(67, 'Tin', 'Tin', 'Hdc', 'admin', '$2y$10$M1RnI4O8B0L46utW5tXz2uLWid6FILo.HkYEXAgPK3.6L0XnOEJom', '2024-11-06 16:40:52', 'Active', 'What year were you born?', '$2y$10$4mbziMKzzuyNqOmLZMGnIOE14hGHbSWI2/4xx7Qi7lu2TNH8pMSCy', '2024-11-06 16:40:52'),
+(72, 'villa00', 'denise', 'villa', 'admin', '$2y$10$vLd7qrRDxGoiSYEU3jZydeUJq01BvkSCS7NBcgDNp3g.JV82srEw6', '2024-11-06 16:55:45', 'Active', 'In what province were you born?', '$2y$10$rq0dCpsf6oJ8GhGz3ujwyu0Bq1lNb9l5jmeaBMUM229nE4EXZE3yi', '2024-11-06 16:55:45'),
+(73, 'Sam05', 'Sam', 'Smith', 'staff', '$2y$10$hwnNl.3Q63JPw4svqsYJTO9t8QVML300jDLN.G/UNWd7RzC6ddGeK', '2024-11-07 01:35:08', 'Active', 'What year were you born?', '$2y$10$W7lT1qVpiQLT2Z7UCyA1IOq/M04I1eUYbnVgbIemk4nFKTAMWYf/u', '2024-11-07 01:35:08'),
+(74, 'Pedro', 'Pedro', 'Dela Cruz', 'admin', '$2y$10$Wm68z7hGvX7brLxguVjYpuKm1pmYzsvjBB5PD.3qToTy1BR3XrtcC', '2024-11-08 17:21:40', 'Active', 'What year were you born?', '$2y$10$AXX9cJGuB2LusrnlVHX0iune9sv0RyDPJ8XE235erE41ctRWhSiO2', '2024-11-08 17:21:40');
 
 -- --------------------------------------------------------
 
@@ -595,7 +674,7 @@ ALTER TABLE `archived_customers`
 -- AUTO_INCREMENT for table `archived_service`
 --
 ALTER TABLE `archived_service`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `archived_users`
@@ -613,13 +692,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `service_category_price`
@@ -637,13 +716,13 @@ ALTER TABLE `service_options`
 -- AUTO_INCREMENT for table `service_option_price`
 --
 ALTER TABLE `service_option_price`
-  MODIFY `option_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `option_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `service_request`
 --
 ALTER TABLE `service_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -655,13 +734,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `user_profile`

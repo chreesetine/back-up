@@ -158,6 +158,7 @@ if(!isset($_SESSION['user_role'])) {
                     <h1>Dashboard</h1>
                 </div>
             </nav>
+
                  <!----CARDS FOR SERVICE TYPE ORDERS (RUSH/PICK UP/DELIVERY) ---->
                 <div class="cards">
                     <div class="card card-body p-3">
@@ -196,43 +197,97 @@ if(!isset($_SESSION['user_role'])) {
                         </p>
                     </div>
 
+                    <!-- DELIVERY -->
                     <div class="card card-body p-3">
-                        <h4>Delivery Requests</h4>
+                        <div class="header-container">
+                            <h4 class="delivery-title">Delivery Requests</h4>
+                            <div class="notification-bell">
+                                <a href="#" id="bell-icon">
+                                    <i class="fas fa-bell" style="font-size: 19px;"></i> <!-- Font Awesome Bell Icon -->
+                                </a>
+                            </div>
+                        </div>
+
                         <h5 id="delivery-orders">
                         <?php 
-                            $conn = new mysqli('localhost', 'root', '', 'laundry_db');
+                        $conn = new mysqli('localhost', 'root', '', 'laundry_db');
 
-                            if ($conn->connect_error) {
+                        if ($conn->connect_error) {
                                 echo json_encode(['status' => 'error', 'message' => 'Database connection failed']);
-                                exit;
-                            }
+                        exit;
+                        }
 
-                            //query to count delivery requests for today
-                            $qry = "
-                                SELECT COUNT(DISTINCT sr.customer_id) AS total_requests
-                                FROM service_request sr
-                                JOIN transaction t 
-                                ON sr.customer_id = t.customer_id
-                                WHERE DATE(sr.request_date) = CURDATE()
-                                AND t.service_option_name = 'Delivery'
-                            ";
+                        $sql = "
+                        SELECT 
+                            sr.customer_name,
+                            t.customer_address,
+                            SUM(sr.weight) AS total_weight,
+                            SUM(sr.quantity) AS total_quantity,
+                            t.total_amount,
+                            MAX(sr.request_date) AS request_date  
+                        FROM 
+                            service_request sr
+                        JOIN 
+                            transaction t ON sr.request_id = t.request_id
+                        WHERE 
+                            DATE(sr.request_date) = CURDATE()
+                            AND t.service_option_name = 'Delivery'
+                        GROUP BY 
+                            sr.customer_name, t.customer_address";
 
-                            $qry_run = $conn->query($qry);
+                            $qry_run = $conn->query($sql); 
 
-                            if (!$qry_run) {
-                                echo json_encode(['status' => 'error', 'message' => 'Query failed: ' . $conn->error]);
-                                exit;
-                            }
+                        if (!$qry_run) {
+                            echo json_encode(['status' => 'error', 'message' => 'Query failed: ' . $conn->error]);
+                            exit;
+                        }
 
-                            $row = $qry_run->fetch_assoc();
+                        $customer_requests = [];
+                        while ($row = $qry_run->fetch_assoc()) {
+                            $customer_requests[] = [
+                                'name' => $row['customer_name'],
+                                'customer_address' => $row['customer_address'],
+                                'weight' => $row['total_weight'],
+                                'quantity' => $row['total_quantity'],
+                                'request_date' => $row['request_date'], 
+                                'total_amount' => $row['total_amount']
+                            ];
+                        }
 
-                            echo '<h2>' . $row['total_requests'] . '</h2>';
-  
-                            $conn->close();
+                       // unique key 
+                        $uniqueCustomerKeys = [];
+                        foreach ($customer_requests as $request) {
+                            $uniqueKey = strtolower(trim($request['name'])) . '-' . strtolower(trim($request['customer_address']));
+                            $uniqueCustomerKeys[$uniqueKey] = true; // Use the unique key as an array key
+                        }
+
+                        // Count unique customers based on the unique keys
+                        $requestCount = count($uniqueCustomerKeys);
+
+                        $conn->close();
+                        echo '<h2>' . $requestCount . '</h2>'; // Added context to the count
+                        echo '<script>
+                                const customerRequests = ' . json_encode($customer_requests) . ';
+                                const requestCount = ' . $requestCount . ';
+                            </script>';
                         ?>
                         </h5>
                     </div>
 
+                    <!-- MODAL FOR NOTIFICATIONS -->
+                    <div id="notificationModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modalhead">
+                                <span class="close" onclick="closeModal()">&times;</span>
+                                <h2>🔔 Notifications</h2>
+                                <br>
+                            <p>You have <span id="notification-count"></span> Delivery Requests for Today!</p>
+                            </div>
+                            <div id="notification-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- RUSH -->
                     <div class="card card-body p-3">
                         <h4>Rush Requests</h4>
                         <h5 id="rush-orders">
@@ -308,23 +363,38 @@ if(!isset($_SESSION['user_role'])) {
                 <div class="container">
                     <div class="left">
                         <div class="calendar">
-                        <div class="month">
-                            <i class="fas fa-angle-left prev"></i>
-                            <div class="date">December 2015</div>
-                            <i class="fas fa-angle-right next"></i>
-                        </div>
-                        <div class="weekdays">
-                            <div>Sun</div>
-                            <div>Mon</div>
-                            <div>Tue</div>
-                            <div>Wed</div>
-                            <div>Thu</div>
-                            <div>Fri</div>
-                            <div>Sat</div>
-                        </div>
-                        <div class="days"></div>
+                            <div class="month">
+                                <i class="fas fa-angle-left prev"></i>
+                                <div class="date">December 2015</div>
+                                <i class="fas fa-angle-right next"></i>
+                            </div>
+                            <div class="weekdays">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div class="days"></div>
+
+                            <div class="container-sm">
+                                <div class="legend-container">
+                                    <div class="legend-item">
+                                        <i class='bx bxs-circle' style='color:#0758ff'></i>
+                                        <span>Past events</span>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <i class='bx bxs-circle' style='color:#ff0707'></i>
+                                        <span>Upcoming events</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div class="right">
                         <div class="event-title">Events</div>
                         <hr>
@@ -338,7 +408,10 @@ if(!isset($_SESSION['user_role'])) {
                             die("Connection failed: " . $conn->connect_error);
                         }
 
-                        $query = "SELECT request_id, laundry_service_option, request_date, service_request_date, customer_name FROM service_request WHERE order_status = 'completed'";
+                        $query = "SELECT sr.request_id, sr.laundry_service_option, sr.request_date, sr.service_request_date, sr.customer_name , t.service_option_name, t.laundry_cycle
+                                FROM service_request sr 
+                                INNER JOIN transaction t ON sr.request_id = t.request_id 
+                                WHERE sr.order_status = 'completed'";
                         $result = $conn->query($query);
 
                         if (!$result) {
@@ -351,6 +424,8 @@ if(!isset($_SESSION['user_role'])) {
                         $events[] = array(
                             'title' => $row['laundry_service_option'],
                             'customer_name' => $row['customer_name'],
+                            'service_option_name' => $row['service_option_name'],
+                            'laundry_cycle' => $row['laundry_cycle'],
                             'start' => $row['service_request_date'],
                             'end' => $row['request_date'],
                         );
@@ -475,17 +550,19 @@ if(!isset($_SESSION['user_role'])) {
                                 const eventDate = new Date(event.end);
                                 if (eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth() && eventDate.getFullYear() === date.getFullYear()) {
                                     eventList += `
-                                        <hr style="border: 1px solid #b8c1ec;"> 
-                                        <div class="event">
+                                        <hr style="border: 1px solid #b8c1ec; margin: 1.5rem 0;">
+                                        <div class="event_container">
                                             <h4><li>${event.title}</li></h4>
-                                            <span>Customer name: ${event.customer_name}</span>
-                                            <span>Start: ${event.start}</span>
-                                            <span>End: ${event.end}</span>
+                                            <div class="event-details">
+                                                <span>Customer Name: ${event.customer_name}</span>
+                                                <span>Service Type: ${event.service_option_name}</span>
+                                                <span>Laundry Cycle: ${event.laundry_cycle}</span>
+                                                <span>Start: ${event.start}</span>
+                                                <span>End: ${event.end}</span>
+                                            </div>
                                         </div>
-                                       
-                                        
                                     `;
-                                } // <hr style="border: 1px solid #b8c1ec; margin: 1rem;"> 
+                                }  
                             });
 
                             eventsContainer.innerHTML = eventList;
@@ -501,15 +578,16 @@ if(!isset($_SESSION['user_role'])) {
 
                         displayEventsForDate(new Date().getDate(), <?php echo json_encode($events); ?>);
                     </script>
-                </div> <!--END OF CALENDAR CONTAINER-->
+                </div>
+                <!--END OF CALENDAR CONTAINER-->
             
             <div id="logoutModal" class="modal" style="display:none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
-                        <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
-                        <button class="btn btn-no">No</button>
+                        <a href="/laundry_system/homepage/logout.php" class="btns btn-yes">Yes</a>
+                        <button class="btns btn-no">No</button>
                     </div>
                 </div>
             </div>
