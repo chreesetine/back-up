@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //add user
     document.getElementById('userForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting in the default way
+        event.preventDefault(); 
     
-        const formData = new FormData(this); // Get the form data
+        const formData = new FormData(this); 
         
         fetch('add_users.php', {
             method: 'POST',
@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit User Modal functionality
     const editModal = document.getElementById('editModal');
     const closeEditButton = editModal.querySelector('.close-btn');
-    const editForm = document.getElementById('editForm');
 
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -105,8 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Response from server', data);
+
             if (data.success) {
-                //success message
                 Swal.fire({
                     icon: 'success',
                     title: 'User Updated!',
@@ -114,10 +114,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     showConfirmButton: false,
                     timer: 1500
                 }).then(function() {
-                    window.location.href = 'users.php';
+                    /* window.location.href = 'users.php';*/
+                    document.getElementById('editModal').style.display = 'none'; // Hide modal
+                fetchUsers(); // Reload user table
                 });
             } else {
-                //error message
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -127,15 +128,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            //handle error
+            console.error('Unexpected error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong! Please try again.',
             });
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     });
+    
+   // fetchUsers();
+
+    // fetch users
+    const fetchUsers = () => {
+        fetch('fetch_users.php')
+            .then(response => response.text())
+            .then(html => {
+                const userTable = document.querySelector('#user_table');
+                userTable.innerHTML = html;
+                attachButtonListeners();
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    };
+
+    const attachButtonListeners = () => {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Handle edit button functionality here
+                // const userId = button.dataset.id;
+                // const username = button.dataset.username;
+                // const firstName = button.dataset.firstname;
+                // const lastName = button.dataset.lastname;
+                // const userRole = button.dataset.userrole;
+                //console.log("Edit button clicked for user ID:", userId);
+
+                document.getElementById('editUserId').value = button.dataset.id;
+                document.getElementById('editUsername').value = button.dataset.username;
+                document.getElementById('editFirstName').value = button.dataset.firstname;
+                document.getElementById('editLastName').value = button.dataset.lastname;
+                document.getElementById('editUserRole').value = button.dataset.userrole;
+
+                document.getElementById('editModal').style.display = 'block';
+            });
+        });
+        document.querySelectorAll('.archive-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Handle archive button functionality here
+                userIdToArchive = button.dataset.id;
+                archiveModal.style.display = 'block';
+                console.log("Archive button clicked for user ID:", userIdToArchive);
+            });
+        });
+    };
+
+    fetchUsers();
+    setInterval(fetchUsers, 60000);
 
     closeEditButton.addEventListener('click', () => {
         editModal.style.display = 'none';
@@ -146,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
             editModal.style.display = 'none';
         }
     });
-
 
     // Password Validation and Form Submission Handling
     const passwordField = document.getElementById('password');
@@ -234,15 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         .then(response => response.text())  
         .then(data => {
-            console.log('Raw response:', data);  
-    
-            // Check if response is JSON or an HTML error page
-            if (data.trim().startsWith('<')) {
-                console.error('Received HTML instead of JSON:', data);
-                return;  
-            }
-    
-            try {
+                try {
                 const jsonData = JSON.parse(data);
 
                 if (jsonData.success) {
@@ -276,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* pagination */
     const rowsPerPage = 15;
-    const tableBody = document.querySelector('table tbody');
+    const tableBody = document.querySelector('table');
     const rows = tableBody.querySelectorAll('tr');
     const paginationContainer  = document.getElementById('pagination');
 
@@ -294,57 +333,58 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupPagination() {
-      paginationContainer.innerHTML = '';
-
-      // previous arrow
-      let prevPageLink = document.createElement('li');
-      prevPageLink.classList.add('page-item');
-      prevPageLink.innerHTML = `<a class="page-link" href="#"><<</a>`;
-      prevPageLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          if (currentPage > 0) {
-              currentPage--;
-              displayRows(currentPage * rowsPerPage);
-              setActivePage(currentPage);
-          }
-      });
-
-      paginationContainer.appendChild(prevPageLink);
+        paginationContainer.innerHTML = '';
+    
+        // previous arrow
+        let prevPageLink = document.createElement('li');
+        prevPageLink.classList.add('page-item');
+        prevPageLink.innerHTML = `<a class="page-link" href="#"><<</a>`;
+        prevPageLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (currentPage > 0) {
+                currentPage--;
+                displayRows(currentPage * rowsPerPage);
+                setActivePage(currentPage);
+            }
+        });
+    
+        paginationContainer.appendChild(prevPageLink);
 
       // numbered page links
       for (let i = 0; i < totalPages; i++) {
-            let pageLink = document.createElement('li');
-            pageLink.classList.add('page-item');
-            pageLink.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
+        let pageLink = document.createElement('li');
+        pageLink.classList.add('page-item');
+        pageLink.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
 
-            pageLink.addEventListener('click', function (e) {
+        pageLink.addEventListener('click', function (e) {
             e.preventDefault();
+            currentPage = i;
             displayRows(i * rowsPerPage);
             setActivePage(i);
         });
 
         paginationContainer.appendChild(pageLink);
-      }
+    }
 
       // next arrow
       let nextPageLink = document.createElement('li');
-      nextPageLink.classList.add('page-item');
-      nextPageLink.innerHTML = `<a class="page-link" href="#">>></a>`;
-      nextPageLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          if (currentPage < totalPages - 1) {
-              currentPage++;
-              displayRows(currentPage * rowsPerPage);
-              setActivePage(currentPage);
-          }
-      });
-      paginationContainer.appendChild(nextPageLink);
-  }
+        nextPageLink.classList.add('page-item');
+        nextPageLink.innerHTML = `<a class="page-link" href="#">>></a>`;
+        nextPageLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            displayRows(currentPage * rowsPerPage);
+            setActivePage(currentPage);
+        }
+    });
+    paginationContainer.appendChild(nextPageLink);
+    }
 
     function setActivePage(pageIndex) {
         const pageLinks = paginationContainer.querySelectorAll('.page-item');
         pageLinks.forEach(link => link.classList.remove('active'));
-        pageLinks[pageIndex].classList.add('active');
+        pageLinks[pageIndex + 1].classList.add('active'); // +1 to skip the prev arrow
     }
 
     // Initialization of table with first page and pagination links
@@ -394,5 +434,4 @@ document.addEventListener('DOMContentLoaded', function() {
             logoutModal.style.display = "none"; // Hide the modal
         }
     });
-    
 });

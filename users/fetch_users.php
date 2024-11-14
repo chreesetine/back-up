@@ -17,6 +17,11 @@ if (!$result) {
 
 // Generate table rows
 while ($row = mysqli_fetch_assoc($result)) {
+    $current_time = new DateTime();
+    $last_active_time = new DateTime($row['last_active']);
+    $interval = $current_time->diff($last_active_time);
+    $user_status = ($interval->days < 30) ? 'Active' : 'Inactive';
+
     echo "<tr>";
     echo "<td>" . htmlspecialchars($row['user_id']) . "</td>";
     echo "<td>" . htmlspecialchars($row['username']) . "</td>";
@@ -26,6 +31,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     echo "<td>" . htmlspecialchars($row['last_active']) . "</td>";
     echo "<td>" . htmlspecialchars($row['user_status']) . "</td>";
     echo "<td>" . htmlspecialchars($row['date_created']) . "</td>";
+    echo "<td><a href='javascript:void(0);' class='edit-btn' data-id='" . htmlspecialchars($row['user_id']) . "' data-username='" . htmlspecialchars($row['username']) . "' data-firstname='" . htmlspecialchars($row['first_name']) . "' data-lastname='" . htmlspecialchars($row['last_name']) . "' data-userrole='" . htmlspecialchars($row['user_role']) . "'><i class='bx bxs-edit'></i></a></td>";
+    echo "<td><a href='javascript:void(0);' class='archive-btn' data-id='" . htmlspecialchars($row['user_id']) . "'><i class='bx bxs-archive-in'></i></a></td>";
     echo "</tr>";
 }
 

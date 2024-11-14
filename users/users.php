@@ -13,13 +13,11 @@ if ($_SESSION['user_role'] !== 'admin') {
     header('location: /laundry_system/homepage/homepage.php');
     exit();
 } 
-
 $user_role = $_SESSION['user_role'];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,50 +28,50 @@ $user_role = $_SESSION['user_role'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 </head>
-
 <body>
     <div class="progress"></div>
     <div class="wrapper">
-        <aside id="sidebar">
+    <aside id="sidebar">
             <div class="d-flex">
                 <button id="toggle-btn" type="button">
                     <i class="bx bx-menu-alt-left"></i>
                 </button>
 
                 <div class="sidebar-logo">
-                    <a href="/laundry_system/dashboard/dashboard.php">Azia Skye</a>
+                    <a href="#">Azia Skye</a>
                 </div>
             </div>
 
-            <ul class="sidebar-nav"> 
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="/laundry_system/dashboard/dashboard.php" class="sidebar-link">
+                        <i class="lni lni-grid-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="/laundry_system/profile/profile.php" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+
                 <?php if ($user_role === 'admin') : ?>
-                    <li class="sidebar-item">
-                        <a href="/laundry_system/dashboard/dashboard.php" class="sidebar-link">
-                            <i class="lni lni-grid-alt"></i>
-                            <span class="nav-item">Dashboard</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item">
-                        <a href="/laundry_system/profile/profile.php" class="sidebar-link">
-                            <i class="lni lni-user"></i>
-                            <span class="nav-item">Profile</span>
-                        </a>
-                    </li>
-
                     <li class="sidebar-item">
                         <a href="/laundry_system/users/users.php" class="sidebar-link">
                             <i class="lni lni-users"></i>
-                            <span class="nav-item">Users</span>
+                            <span>Users</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/records/customer.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="/laundry_system/records/records.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
-                            <span class="nav-item">Records</span>
+                            <span>Records</span>
                         </a>
 
                         <ul id="records" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
@@ -90,50 +88,72 @@ $user_role = $_SESSION['user_role'];
                             </li>
                         </ul>
                     </li>
+                <?php endif; ?>
 
-                    <li class="sidebar-item">
-                        <a href="/laundry_system/transaction/transaction.php" class="sidebar-link">
-                            <i class="lni lni-coin"></i>
-                            <span class="nav-item">Transaction</span>
-                        </a>
-                    </li>
+                <li class="sidebar-item">
+                    <a href="/laundry_system/transaction/transaction.php" class="sidebar-link">
+                        <i class="lni lni-coin"></i>
+                        <span>Transaction</span>
+                    </a>
+                </li>
 
-                    <li class="sidebar-item">
-                        <a href="/laundry_system/sales_report/report.php" class="sidebar-link">
-                            <i class='bx bx-line-chart'></i>
-                            <span class="nav-item">Sales Report</span>
-                        </a>
-                    </li>
+                <li class="sidebar-item">
+                    <a href="/laundry_system/sales_report/report.php" class="sidebar-link">
+                        <i class='bx bx-line-chart'></i>
+                        <span>Sales Report</span>
+                    </a>
+                </li>
 
+                    <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
-                        <a href="/laundry_system/settings/setting.php" class="sidebar-link">
+                        <a href="/laundry_system/settings/settings.php" class="sidebar-link">
                             <i class="lni lni-cog"></i>
-                            <span class="nav-item">Settings</span>
+                            <span>Settings</span>
                         </a>
                     </li>
 
-                    <hr style="border: 1px solid #232946; margin: 8px"> 
+                    <hr style="border: 1px solid #b8c1ec; margin: 8px">
 
                     <li class="sidebar-item">
-                        <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        data-bs-target="#archived" aria-expanded="false" aria-controls="archived">
                             <i class='bx bxs-archive-in'></i>
-                            <span class="nav-item">Archived</span>
+                            <span>Archived</span>
                         </a>
+
+                        <ul id="archived" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_users.php" class="sidebar-link">Archived Users</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_customer.php" class="sidebar-link">Archived Customer</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_service.php" class="sidebar-link">Archived Service</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a href="/laundry_system/archived/archive_category.php" class="sidebar-link">Archived Category</a>
+                            </li>
+                        </ul>
                     </li>
                 <?php endif; ?>
-            </ul>  
-            
+            </ul>
+
             <div class="sidebar-footer">
-                <a href="javascript:void(0)" class="sidebar-link" id="btn_logout">
+                <a href="#" id="btn_logout" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
-
+        
+        <!-------------MAIN CONTENT------------->
         <div class="main-content">
             <nav>
-                <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between" id="navbar">
                     <h1>Users</h1>
 
                     <div class="search_bar" m-1>
@@ -169,35 +189,55 @@ $user_role = $_SESSION['user_role'];
                     </thead>
                     <tbody id = "user_table">
                         <?php 
+                            $con = new mysqli('localhost', 'root', '', 'laundry_db');
+                            
+                            if($con->connect_error) {
+                                die("Connection Error: " . $con->connect_error);
+                            }
+
                         $query = "SELECT * FROM user"; 
                         $result = mysqli_query($con, $query);
 
+                        // 5:55 am 11/14/24
                         if ($result->num_rows > 0) {
                             while($row = mysqli_fetch_assoc($result)) {
                                 $current_time = new DateTime();
                                 $last_active_time = new DateTime($row['last_active']);
                                 $interval = $current_time->diff($last_active_time);
                                 $user_status = ($interval->days < 30) ? 'Active' : 'Inactive';
+                        
+                                // Check if the current database status is different from the calculated status
+                                if ($row['user_status'] !== $user_status) {
+                                    // Update the user_status in the database if it's different
+                                    $updateStatusStmt = $con->prepare("UPDATE user SET user_status = ? WHERE user_id = ?");
+                                    $updateStatusStmt->bind_param("si", $user_status, $row['user_id']);
+                                    $updateStatusStmt->execute();
+                                    $updateStatusStmt->close();
+                                }
                         ?>
                                 <tr>
-                                    <td><?php echo $row['user_id']; ?></td>
-                                    <td><?php echo $row['username']; ?></td>
-                                    <td><?php echo $row['first_name']; ?></td>
-                                    <td><?php echo $row['last_name']; ?></td>
-                                    <td><?php echo $row['user_role']; ?></td>
-                                    <td><?php echo $row['last_active']; ?></td>
-                                    <td><?php echo $user_status; ?></td>
-                                    <td><?php echo $row['date_created']; ?></td>
+                                    <td><?php echo htmlspecialchars($row['user_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['first_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['last_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['user_role']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['last_active']); ?></td>
+                                    <td><?php echo htmlspecialchars($user_status); ?></td> <!-- Display updated status -->
+                                    <td><?php echo htmlspecialchars($row['date_created']); ?></td>
                                     <td>
-                                        <a href="javascript:void(0);" class="edit-btn" data-id="<?php echo $row['user_id']; ?>" data-username="<?php echo $row['username']; ?>" 
-                                            data-firstname="<?php echo $row['first_name']; ?>" data-lastname="<?php echo $row['last_name']; ?>" 
-                                            data-userrole="<?php echo $row['user_role']; ?>">
-                                            <i class="bx bxs-edit"></i>
+                                        <a href="javascript:void(0);" class="edit-btn" 
+                                           data-id="<?php echo htmlspecialchars($row['user_id']); ?>" 
+                                           data-username="<?php echo htmlspecialchars($row['username']); ?>" 
+                                           data-firstname="<?php echo htmlspecialchars($row['first_name']); ?>" 
+                                           data-lastname="<?php echo htmlspecialchars($row['last_name']); ?>" 
+                                           data-userrole="<?php echo htmlspecialchars($row['user_role']); ?>">
+                                           <i class='bx bxs-edit'></i>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="javascript:void(0);" class="archive-btn" data-id="<?php echo $row['user_id']; ?>">
-                                            <i class='bx bxs-archive-in'></i>
+                                        <a href="javascript:void(0);" class="archive-btn" 
+                                           data-id="<?php echo htmlspecialchars($row['user_id']); ?>">
+                                           <i class='bx bxs-archive-in'></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -210,7 +250,8 @@ $user_role = $_SESSION['user_role'];
                             </tr>
                         <?php
                         }
-                        ?>      
+                        ?>
+                        
                     </tbody>
                 </table>
             </div>
@@ -250,12 +291,12 @@ $user_role = $_SESSION['user_role'];
                             <div class="form-group">
                                     <label for="username">Username</label>
                                     <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="username" required>
-                            </div> 
-
+                            </div>
+                        
                             <div class="form-group">
-                                <label for="form-label">Security Questions</label>
+                                <label for="question">Security Questions</label>
                                     <select name="question" class="form-control">
-                                    <option selected>--Select Question--</option>
+                                        <option selected>--Select Question--</option>
                                         <option value="In what province were you born?">In what province were you born?</option>
                                         <option value="What was your favorite food as a child?">What was your favorite food as a child?</option>
                                         <option value="What year were you born?">What year were you born?</option>
@@ -278,10 +319,10 @@ $user_role = $_SESSION['user_role'];
 
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <div class="password-wrapper">
-                                    <input type="password" class="form-control" placeholder="Create password" name="password" id="password" autocomplete="new-password" required>
-                                    <i class="bx bx-show toggle-password" data-target="#password"></i>
-                                </div>
+                                    <div class="password-wrapper">
+                                        <input type="password" class="form-control" placeholder="Create password" name="password" id="password" autocomplete="new-password" required>
+                                        <i class='bx bx-show toggle-password' data-target="#password"></i>
+                                    </div>                       
                                 <div id="passwordHelp" class="alert alert-danger mt-2" style="display:none">
                                 <ul>
                                     <li id="length" style="color:red;">At least 8 characters</li>
@@ -300,7 +341,7 @@ $user_role = $_SESSION['user_role'];
             </div>   <!-- closing tag add user modal body --> 
             
             <!-- edit modal structure -->
-            <div class="modal" id="editModal" style="display:none;">
+            <div class="modal" id="editModal" style="display: none;">
                 <div class="modal-content"> <!--modal-content -->
                     <div class="modal-header">
                         <h1>Edit User</h1>
@@ -323,18 +364,18 @@ $user_role = $_SESSION['user_role'];
                                 </div>
                             </div>
 
-                            <div class="col">
+                            <div class="form-group">
                                 <label for="editUsername">Username</label>
-                                <input type="text" class="form-control" id="editUsername" name="username" autocomplete="username"> 
+                                <input type="text" class="form-control" id="editUsername" name="username" autocomplete="username">
                             </div>
 
                             <div class="form-group">
-                                <label for="editUserRole">User Role</label>
-                                <select class="form-control" name="user_role" id="editUserRole" autocomplete="role" required>
+                                    <label for="user_role">User Role</label>
+                                    <select class="form-control" name="user_role" id="editUserRole" autocomplete="role" required>
                                         <option value="admin">Admin</option>
                                         <option value="staff">Staff</option>
-                                    </select> 
-                            </div>
+                                    </select>      
+                            </div>   
                         
                             <button type="submit" class="btn btn-success">Save</button>
                         </form>
@@ -348,6 +389,7 @@ $user_role = $_SESSION['user_role'];
                     <span class="close" id="closeArchiveModal">&times;</span>
                     <p>Do you want to archive this user?</p>
                     <button type="button" id="confirmArchiveButton" class="btn btn-success">Yes</button>
+                   <!-- <button id="cancelArchiveButton" class="btn btn-danger">No</button> -->
                     <button type="button" id="cancelArchiveButton" class="btn btn-danger">No</button>
                 </div>
             </div>
@@ -363,7 +405,7 @@ $user_role = $_SESSION['user_role'];
             <div id="logoutModal" class="modal" style="display: none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
                         <a href="/laundry_system/homepage/logout.php" class="btns btn-yes">Yes</a>
                         <button class="btns btn-no">No</button>
@@ -372,18 +414,16 @@ $user_role = $_SESSION['user_role'];
             </div>
 
         </div> <!-- main content -->
-    </div> <!-- wrapper -->
+    </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="users.js" defer></script>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="users.js"></script>
 </html>
-
 <?php
 $con->close();
 ?>
