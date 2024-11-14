@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2024 at 11:30 AM
+-- Generation Time: Nov 14, 2024 at 01:47 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -80,7 +80,13 @@ INSERT INTO `archived_customers` (`archive_id`, `customer_id`, `customer_name`, 
 (15, 42, 'Kristine', '65644564564', '', '', 'Isabela Road', '', '2024-11-06 07:32:01'),
 (16, 43, 'Milton', '74747444445', '', '', '', '', '2024-11-06 07:34:22'),
 (17, 50, 'Mickey', '23455643535', '', '', '', '', '2024-11-06 07:43:35'),
-(18, 49, 'Gwen', '42343435345', '', '', 'sjdm', '', '2024-11-06 07:45:06');
+(18, 49, 'Gwen', '42343435345', '', '', 'sjdm', '', '2024-11-06 07:45:06'),
+(19, 81, 'DANI DS', '09876890987', '', '', 'CITRUS', '', '2024-11-13 08:26:53'),
+(20, 82, 'Gabrielle Dela Cruz', '09765434562', 'bulacan', 'sjdm', 'Citrus', '', '2024-11-13 08:39:58'),
+(21, 83, 'Albert Einstein', '09876546789', 'bulacan', 'sjdm', 'California', 'Gumaoc West', '2024-11-13 08:46:57'),
+(22, 86, 'Alexia Tuloy', '09090876865', 'bulacan', 'sjdm', 'Sarmiento', 'Gaya-gaya', '2024-11-13 09:20:21'),
+(23, 85, 'Alexia Dela Cruz', '09678978987', '', '', '', '', '2024-11-13 09:54:48'),
+(24, 84, 'Alexia Dela Cruz', '09876567897', '', '', '', '', '2024-11-13 09:54:55');
 
 -- --------------------------------------------------------
 
@@ -136,7 +142,8 @@ INSERT INTO `archived_users` (`archive_id`, `user_id`, `username`, `first_name`,
 (10, 68, 'Almira', 'Almira', 'Serkira', 'admin', '2024-11-06 08:44:07'),
 (11, 70, 'deniseV0', 'denise', 'v', 'admin', '2024-11-06 08:51:04'),
 (12, 69, 'deniseV', 'denise', 'v', 'admin', '2024-11-06 08:51:08'),
-(13, 71, 'villa00', 'denise', 'villa', 'admin', '2024-11-06 08:52:00');
+(13, 71, 'villa00', 'denise', 'villa', 'admin', '2024-11-06 08:52:00'),
+(14, 74, 'Pedro', 'Pedro', 'Dela Cruz', 'admin', '2024-11-13 22:08:42');
 
 -- --------------------------------------------------------
 
@@ -145,7 +152,7 @@ INSERT INTO `archived_users` (`archive_id`, `user_id`, `username`, `first_name`,
 --
 
 CREATE TABLE `category` (
-  `category_id` int(11) NOT NULL,
+  `category_id` int(255) NOT NULL,
   `laundry_category_option` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -155,8 +162,8 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`category_id`, `laundry_category_option`) VALUES
 (1, 'Clothes/Table Napkins/Pillowcase'),
-(2, 'Bedsheet/Table Cloths/Curtain\r\n'),
-(3, 'Comforter/Bath towel\r\n');
+(2, 'Bedsheet/Table Cloths/Curtain'),
+(3, 'Comforter/Bath towel');
 
 -- --------------------------------------------------------
 
@@ -218,7 +225,38 @@ INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_number`, `provi
 (76, 'Danielle', '09997657897', '', '', '', ''),
 (77, 'Dani DC', '09567890876', '', '', 'Orange', ''),
 (78, 'Mung Go', '09534534643', '', '', '', ''),
-(79, 'juju beat', '09173627362', '', '', 'verde green 888', '');
+(79, 'juju beat', '09173627362', '', '', 'verde green 888', ''),
+(80, 'Dani ela DC', '09876899087', '', '', 'Marcela', ''),
+(87, 'JC Bieber', '09789899989', '', '', '', ''),
+(88, 'Maria DB', '09872637621', 'bulacan', 'sjdm', 'Towerville', 'Gaya-gaya'),
+(89, 'Samuel Valentine', '09878998997', 'bulacan', 'sjdm', 'Sarmiento', 'Muzon Proper'),
+(90, 'denise', '09123472384', '', '', '', ''),
+(91, 'sabrina', '09882772363', '', '', '', ''),
+(92, 'barry', '09834723423', '', '', '', ''),
+(93, 'huhu', '09127384236', '', '', '', ''),
+(94, 'g wolf', '09433544535', '', '', '', ''),
+(95, 'assssfafwe', '09878767682', '', '', '', ''),
+(96, 'Manny Regalado', '09675789765', '', '', 'Lemery', ''),
+(97, 'Mina De', '09849023748', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_category`
+--
+
+CREATE TABLE `delivery_category` (
+  `d_categoryID` int(255) NOT NULL,
+  `delivery_category` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `delivery_category`
+--
+
+INSERT INTO `delivery_category` (`d_categoryID`, `delivery_category`) VALUES
+(1, 'Delivery (outside Gaya-gaya)'),
+(2, 'Delivery (within Gaya-gaya)');
 
 -- --------------------------------------------------------
 
@@ -297,6 +335,7 @@ INSERT INTO `service_options` (`option_id`, `option_name`) VALUES
 CREATE TABLE `service_option_price` (
   `option_price_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
+  `d_categoryID` int(255) NOT NULL,
   `service_option_type` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -305,10 +344,10 @@ CREATE TABLE `service_option_price` (
 -- Dumping data for table `service_option_price`
 --
 
-INSERT INTO `service_option_price` (`option_price_id`, `option_id`, `service_option_type`, `price`) VALUES
-(1, 1, 'Delivery', '50.00'),
-(3, 3, 'Rush', '50.00'),
-(4, 4, 'Delivery gg', '25.00');
+INSERT INTO `service_option_price` (`option_price_id`, `option_id`, `d_categoryID`, `service_option_type`, `price`) VALUES
+(1, 1, 1, 'Delivery (outside gaya-gaya)', '50.00'),
+(3, 3, 0, 'Rush', '50.00'),
+(4, 1, 2, 'Delivery (within gaya-gaya)', '25.00');
 
 -- --------------------------------------------------------
 
@@ -406,7 +445,25 @@ INSERT INTO `service_request` (`request_id`, `customer_id`, `customer_order_id`,
 (67, 75, 'ord_6732ea827f837', 'hello', '98765667890', 0, '--Select Service--', 1, 'Clothes/Table Napkins/Pillowcase', 8, '8.00', '35.00', '2024-11-13', '2024-11-12', '13:41:22', 'completed'),
 (68, 77, 'ord_6733172f30393', 'Dani DC', '09567890876', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 6, '8.00', '45.00', '2024-11-15', '2024-11-12', '16:51:59', 'completed'),
 (69, 78, 'ord_67331cbc7ec9f', 'Mung Go', '09534534643', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 7, '8.00', '100.00', '0000-00-00', '2024-11-12', '17:15:40', 'cancelled'),
-(70, 79, 'ord_6733282bdee4a', 'juju beat', '09173627362', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 1, '8.00', '45.00', '2024-11-15', '2024-11-12', '18:04:27', 'completed');
+(70, 79, 'ord_6733282bdee4a', 'juju beat', '09173627362', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 1, '8.00', '45.00', '2024-11-15', '2024-11-12', '18:04:27', 'completed'),
+(71, 80, 'ord_67342db130f07', 'Dani ela DC', '09876899087', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '7.00', '35.00', '2024-11-16', '2024-11-13', '12:40:17', 'completed'),
+(72, 81, 'ord_673462470f27c', 'DANI DS', '09876890987', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 8, '8.00', '35.00', '2024-11-14', '2024-11-13', '16:24:39', 'completed'),
+(73, 82, 'ord_673463f1a8105', 'Gabrielle Dela Cruz', '09765434562', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 6, '6.00', '35.00', '2024-11-14', '2024-11-13', '16:31:45', 'completed'),
+(74, 83, 'ord_6734671ac1a77', 'Albert Einstein', '09876546789', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 7, '7.00', '45.00', '2024-11-16', '2024-11-13', '16:45:14', 'completed'),
+(75, 84, 'ord_67346da059dc5', 'Alexia Dela Cruz', '09876567897', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '7.00', '35.00', '0000-00-00', '2024-11-13', '17:13:04', 'active'),
+(76, 84, 'ord_67346e66b21f9', 'Alexia Dela Cruz', '09678978987', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '7.00', '35.00', '0000-00-00', '2024-11-13', '17:16:22', 'active'),
+(77, 86, 'ord_67346ecce84a5', 'Alexia Tuloy', '09090876865', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 7, '7.00', '35.00', '2024-11-16', '2024-11-13', '17:18:04', 'completed'),
+(78, 87, 'ord_6734a9cb94f45', 'JC Bieber', '09789899989', 2, 'Wash/Dry/Press', 3, 'Comforter/Bath towel\r\n', 5, '5.00', '100.00', '2024-11-16', '2024-11-13', '21:29:47', 'completed'),
+(79, 88, 'ord_6734aac6828c4', 'Maria DB', '09872637621', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 5, '5.00', '80.00', '2024-11-14', '2024-11-13', '21:33:58', 'completed'),
+(80, 89, 'ord_6735b50a2c517', 'Samuel Valentine', '09878998997', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain\r\n', 2, '6.00', '45.00', '2024-11-17', '2024-11-14', '16:30:02', 'completed'),
+(81, 90, 'ord_6735c199196da', 'denise', '09123472384', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain', 2, '7.00', '100.00', '2024-11-17', '2024-11-14', '17:23:37', 'completed'),
+(82, 91, 'ord_6735c41d90f78', 'sabrina', '09882772363', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 2, '9.00', '80.00', '2024-11-17', '2024-11-14', '17:34:21', 'completed'),
+(83, 92, 'ord_6735c498b4b3c', 'barry', '09834723423', 1, 'Wash/Dry/Fold', 1, 'Clothes/Table Napkins/Pillowcase', 2, '8.00', '35.00', '2024-11-17', '2024-11-14', '17:36:24', 'completed'),
+(84, 93, 'ord_6735c56636b5c', 'huhu', '09127384236', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 1, '6.00', '80.00', '2024-11-17', '2024-11-14', '17:39:50', 'completed'),
+(85, 94, 'ord_6735c6fb63701', 'g wolf', '09433544535', 2, 'Wash/Dry/Press', 2, 'Bedsheet/Table Cloths/Curtain', 2, '6.00', '100.00', '2024-11-17', '2024-11-14', '17:46:35', 'completed'),
+(86, 95, 'ord_6735c7d16780b', 'assssfafwe', '09878767682', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 1, '6.00', '80.00', '2024-11-17', '2024-11-14', '17:50:09', 'completed'),
+(87, 96, 'ord_6735c88283a72', 'Manny Regalado', '09675789765', 2, 'Wash/Dry/Press', 1, 'Clothes/Table Napkins/Pillowcase', 7, '7.00', '80.00', '2024-11-17', '2024-11-14', '17:53:06', 'completed'),
+(88, 97, 'ord_6735cba1e655b', 'Mina De', '09849023748', 1, 'Wash/Dry/Fold', 2, 'Bedsheet/Table Cloths/Curtain', 3, '9.00', '45.00', '2024-11-15', '2024-11-14', '18:06:25', 'completed');
 
 -- --------------------------------------------------------
 
@@ -499,7 +556,23 @@ INSERT INTO `transaction` (`transaction_id`, `request_id`, `customer_id`, `custo
 (42, 66, 74, 'Melanie ', '', '', 'Heaven subd', '', 1, 'Delivery', 'Rush', '380.00', '50.00', '50.00', '500.00', '120.00'),
 (43, 67, 75, 'hello', '', '', 'sarmiento', '', 0, '--Select Option--', 'Rush', '330.00', '0.00', '50.00', '500.00', '170.00'),
 (44, 68, 77, 'Dani DC', '', '', 'Orange', '', 2, 'Customer Pick-Up', 'Standard', '360.00', '0.00', '0.00', '500.00', '140.00'),
-(45, 70, 79, 'juju beat', '', '', 'verde green 888', '', 1, 'Delivery', 'Standard', '410.00', '50.00', '0.00', '500.00', '90.00');
+(45, 70, 79, 'juju beat', '', '', 'verde green 888', '', 1, 'Delivery', 'Standard', '410.00', '50.00', '0.00', '500.00', '90.00'),
+(46, 71, 80, 'Dani ela DC', '', '', 'Marcela', '', 1, 'Delivery', 'Standard', '295.00', '50.00', '0.00', '500.00', '205.00'),
+(47, 72, 81, 'DANI DS', 'bulacan', 'sjdm', 'CITRUS', 'Muzon South', 1, 'Delivery', 'Rush', '380.00', '50.00', '50.00', '500.00', '120.00'),
+(48, 73, 82, 'Gabrielle Dela Cruz', 'bulacan', 'sjdm', 'Citrus', 'Maharlika', 1, 'Delivery', 'Rush', '310.00', '50.00', '50.00', '500.00', '190.00'),
+(49, 74, 83, 'Albert Einstein', 'bulacan', 'sjdm', 'California', 'Gumaoc West', 1, 'Delivery', 'Standard', '365.00', '50.00', '0.00', '500.00', '135.00'),
+(50, 77, 86, 'Alexia Tuloy', 'bulacan', 'sjdm', 'Sarmiento', 'Gaya-gaya', 1, 'Delivery', 'Standard', '270.00', '25.00', '0.00', '500.00', '230.00'),
+(51, 78, 87, 'JC Bieber', '', '', '', '', 1, 'Delivery', 'Standard', '550.00', '50.00', '0.00', '600.00', '50.00'),
+(52, 79, 88, 'Maria DB', 'bulacan', 'sjdm', 'Towerville', 'Gaya-gaya', 1, 'Delivery', 'Rush', '475.00', '25.00', '50.00', '500.00', '25.00'),
+(53, 80, 89, 'Samuel Valentine', 'bulacan', 'sjdm', 'Sarmiento', 'Muzon Proper', 1, 'Delivery', 'Standard', '320.00', '50.00', '0.00', '500.00', '180.00'),
+(54, 81, 90, 'denise', '', '', '', '', 2, 'Customer Pick-Up', 'Standard', '700.00', '0.00', '0.00', '1000.00', '300.00'),
+(55, 82, 91, 'sabrina', '', '', '', '', 1, 'Delivery', 'Standard', '770.00', '50.00', '0.00', '1000.00', '230.00'),
+(56, 83, 92, 'barry', '', '', '', '', 1, 'Delivery', 'Standard', '330.00', '50.00', '0.00', '500.00', '170.00'),
+(57, 84, 93, 'huhu', '', '', '', '', 1, 'Delivery', 'Standard', '530.00', '50.00', '0.00', '0.00', '-530.00'),
+(58, 85, 94, 'g wolf', '', '', '', '', 1, 'Delivery', 'Standard', '650.00', '50.00', '0.00', '1000.00', '350.00'),
+(59, 86, 95, 'assssfafwe', '', '', '', '', 1, 'Delivery', 'Standard', '530.00', '50.00', '0.00', '1000.00', '470.00'),
+(60, 87, 96, 'Manny Regalado', '', '', 'Lemery', '', 1, 'Delivery', 'Standard', '610.00', '50.00', '0.00', '650.00', '40.00'),
+(61, 88, 97, 'Mina De', '', '', '', '', 1, 'Delivery', 'Rush', '505.00', '50.00', '50.00', '1000.00', '495.00');
 
 -- --------------------------------------------------------
 
@@ -514,7 +587,7 @@ CREATE TABLE `user` (
   `last_name` varchar(255) NOT NULL,
   `user_role` enum('admin','staff') NOT NULL,
   `password` varchar(255) NOT NULL,
-  `last_active` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_active` datetime DEFAULT current_timestamp(),
   `user_status` enum('Active','Inactive') NOT NULL,
   `question` varchar(255) NOT NULL,
   `answer` varchar(255) NOT NULL,
@@ -527,16 +600,16 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `username`, `first_name`, `last_name`, `user_role`, `password`, `last_active`, `user_status`, `question`, `answer`, `date_created`) VALUES
 (1, 'dorisDC', 'Doris', 'Medrano', 'admin', '', '2024-06-28 22:48:05', 'Inactive', '', '', '2024-06-23 10:00:05'),
-(42, 'msc43', 'mascaraa', 'haws', 'admin', '', '2024-08-22 16:00:57', 'Active', '', '', '2024-08-22 16:00:57'),
-(45, 'mascara12', 'mascara', 'cdh', 'admin', '$2y$10$g8v', '2024-08-28 22:22:20', 'Active', '', '', '2024-08-28 22:22:20'),
-(63, 'MaggieGreene', 'Maggie', 'Greene', 'admin', '$2y$10$gL7C7FnTEX5qAq3Xvh3gZuH9exjSUKK0nd4vxvyPQ3X.aGbsMY05O', '2024-10-05 22:23:50', 'Active', '', '', '2024-10-05 22:23:50'),
-(64, 'Ariana Butera', 'Ariana', 'Butera', 'staff', '$2y$10$MIiAilu.k73bYBiczjgzpep3XVNvcGPN6AypViZdp3si4rW5sxhjC', '2024-10-05 22:43:51', 'Active', '', '', '2024-10-05 22:43:51'),
+(42, 'msc43', 'mascaraa', 'haws', 'admin', '', '2024-08-22 16:00:57', 'Inactive', '', '', '2024-08-22 16:00:57'),
+(45, 'mascara12', 'mascara', 'cdh', 'admin', '$2y$10$g8v', '2024-08-28 22:22:20', 'Inactive', '', '', '2024-08-28 22:22:20'),
+(63, 'MaggieGreene', 'Maggie', 'Greene', 'admin', '$2y$10$gL7C7FnTEX5qAq3Xvh3gZuH9exjSUKK0nd4vxvyPQ3X.aGbsMY05O', '2024-11-14 17:49:44', 'Active', '', '', '2024-10-05 22:23:50'),
+(64, 'Ariana Butera', 'Ariana', 'Butera', 'staff', '$2y$10$MIiAilu.k73bYBiczjgzpep3XVNvcGPN6AypViZdp3si4rW5sxhjC', '2024-10-05 22:43:51', 'Inactive', '', '', '2024-10-05 22:43:51'),
 (65, 'mkyg', 'milky', 'grande', 'admin', '$2y$10$vAUCI6A//eF5N1r5cHoX..iueBMkB46Hj0YCh8342r8l1TxlihNim', '2024-10-24 01:17:56', 'Active', '', '', '2024-10-24 01:17:56'),
-(66, 'Tintin', 'Christine', 'Haduca', 'admin', '$2y$10$rqzvpRcGxQCSplwxULjIAe0CYQ1EtfN82W0bUpGZnjUq5aWYhvn4W', '2024-11-03 22:28:15', 'Active', '', '', '2024-11-03 22:28:15'),
+(66, 'Tintin', 'Christine', 'Haduca', 'admin', '$2y$10$rqzvpRcGxQCSplwxULjIAe0CYQ1EtfN82W0bUpGZnjUq5aWYhvn4W', '2024-11-14 18:04:10', 'Active', '', '', '2024-11-03 22:28:15'),
 (67, 'Tin', 'Tin', 'Hdc', 'admin', '$2y$10$M1RnI4O8B0L46utW5tXz2uLWid6FILo.HkYEXAgPK3.6L0XnOEJom', '2024-11-06 16:40:52', 'Active', 'What year were you born?', '$2y$10$4mbziMKzzuyNqOmLZMGnIOE14hGHbSWI2/4xx7Qi7lu2TNH8pMSCy', '2024-11-06 16:40:52'),
 (72, 'villa00', 'denise', 'villa', 'admin', '$2y$10$vLd7qrRDxGoiSYEU3jZydeUJq01BvkSCS7NBcgDNp3g.JV82srEw6', '2024-11-06 16:55:45', 'Active', 'In what province were you born?', '$2y$10$rq0dCpsf6oJ8GhGz3ujwyu0Bq1lNb9l5jmeaBMUM229nE4EXZE3yi', '2024-11-06 16:55:45'),
 (73, 'Sam05', 'Sam', 'Smith', 'staff', '$2y$10$hwnNl.3Q63JPw4svqsYJTO9t8QVML300jDLN.G/UNWd7RzC6ddGeK', '2024-11-07 01:35:08', 'Active', 'What year were you born?', '$2y$10$W7lT1qVpiQLT2Z7UCyA1IOq/M04I1eUYbnVgbIemk4nFKTAMWYf/u', '2024-11-07 01:35:08'),
-(74, 'Pedro', 'Pedro', 'Dela Cruz', 'admin', '$2y$10$Wm68z7hGvX7brLxguVjYpuKm1pmYzsvjBB5PD.3qToTy1BR3XrtcC', '2024-11-08 17:21:40', 'Active', 'What year were you born?', '$2y$10$AXX9cJGuB2LusrnlVHX0iune9sv0RyDPJ8XE235erE41ctRWhSiO2', '2024-11-08 17:21:40');
+(75, 'Peabo', 'Peabo', 'Bryson', 'admin', '$2y$10$3vCXxoMjvO5kBWYc5hmzKutTKDrID7wW1P/enfCL2ADghxJ1YZs5u', '2024-11-14 06:37:03', 'Active', 'What is the name of your favorite pet?', '$2y$10$e/pakJQkgtpwCMPP1bLtzuzPR/HEzC52baqjhnSvHmLzmKI6YRhke', '2024-11-14 06:37:03');
 
 -- --------------------------------------------------------
 
@@ -598,6 +671,12 @@ ALTER TABLE `category`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`);
+
+--
+-- Indexes for table `delivery_category`
+--
+ALTER TABLE `delivery_category`
+  ADD PRIMARY KEY (`d_categoryID`);
 
 --
 -- Indexes for table `service`
@@ -668,7 +747,7 @@ ALTER TABLE `archived_category`
 -- AUTO_INCREMENT for table `archived_customers`
 --
 ALTER TABLE `archived_customers`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `archived_service`
@@ -680,19 +759,25 @@ ALTER TABLE `archived_service`
 -- AUTO_INCREMENT for table `archived_users`
 --
 ALTER TABLE `archived_users`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `category_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+
+--
+-- AUTO_INCREMENT for table `delivery_category`
+--
+ALTER TABLE `delivery_category`
+  MODIFY `d_categoryID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `service`
@@ -722,7 +807,7 @@ ALTER TABLE `service_option_price`
 -- AUTO_INCREMENT for table `service_request`
 --
 ALTER TABLE `service_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -734,13 +819,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `user_profile`

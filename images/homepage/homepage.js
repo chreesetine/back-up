@@ -18,16 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    const login_form = document.getElementById("form_container");
-    const closeBtn = document.getElementsByClassName("btnClose")[0];
-
-    //close the service form
-    closeBtn.onclick = function() {
-        login_form.style.display = "none";
-    }
-});
-
-document.addEventListener('DOMContentLoaded', (event) => {
     const btnLogin = document.getElementById('form_open');
     const btnLaundryService = document.getElementById('openService');
     const login_form = document.getElementById('form_container');
@@ -44,6 +34,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             laundry_service_form.style.display = 'block';
             login_form.style.display = 'none';
     });
+
 });
 
 //scrolling effect
@@ -52,6 +43,24 @@ window.addEventListener('scroll', () => {
     const scaleValue = 0.5 + (scroll * 0.5); // Scale from 0.5 to 1 based on scroll position
     document.body.style.setProperty('--scale', scaleValue);
 }, false);
+
+
+//POP-UP LOGIN FORM
+document.addEventListener('DOMContentLoaded', (event) => {
+    const login_form = document.getElementById("form_container");
+    const openLogin = document.getElementById("form_open");
+    const closeBtn = document.getElementsByClassName("btnClose")[0];
+
+    //open the service form
+    openLogin.onclick = function() {
+        login_form.style.display = "block";
+    }
+
+    //close the service form
+    closeBtn.onclick = function() {
+        login_form.style.display = "none";
+    }
+});
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const service_form = document.getElementById("service_form");
@@ -73,29 +82,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 });
 
-//LOGIN IN SERVICE REQUEST
-let redirectToServiceRequest = false;
+//pop up for laundry service form
 document.addEventListener('DOMContentLoaded', (event) => {
-    //POP-UP LOGIN FORM IN SERVICE REQUEST
-    const login_form = document.getElementById("form_container");
-    const openLogin = document.getElementById("form_open");
-    const closeBtn = document.getElementsByClassName("btnClose")[1];
-
-    //open the service form
-    openLogin.onclick = function() {
-        login_form.style.display = "block";
-    }
-
-    //close the service form
-    closeBtn.onclick = function() {
-        login_form.style.display = "none";
-    }
-
-    //pop up for laundry service form
     const service_form = document.getElementById("service_form");
     const openBtn = document.getElementById("openService");
-
-    let isLoggedIn = false;
+    const closeBtn = document.getElementsByClassName("btnClose")[1];
 
     //open the service form
     openBtn.onclick = function() {
@@ -107,36 +98,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         service_form.style.display = "none";
     }
 
-    openBtn.addEventListener('click', () => {
-        // Check if the user is logged in
-        if (isLoggedIn) {
-            // Directly show the service request form
-            service_form.style.display = "block";
-            login_form.style.display = 'none';
-        } else {
-            //if not logged in, show the warning and then the choice
-            service_form.style.display = 'none';
-
-            Swal.fire({
-                title: "Authorized users only have access to the service request.",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 3000,
-            }).then(() => {
-                Swal.fire({
-                    title: "Please log in to access the service request.",
-                    showConfirmButton: true,
-                    icon: "warning"
-                }).then((choice) => {
-                    if (choice.isConfirmed) {
-                        redirectToServiceRequest = true;
-                        login_form.style.display = "block";
-                        service_form.style.display = 'none';
-                    }
-                });
-            });
-        }
-    });
 });
 
 //OVERVIEW PANEL
@@ -165,22 +126,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function validateContactNumber(input) {
-        const regex = /^09[0-9]{9}$/; 
-        if (!regex.test(input.value)) {
-            if (!input.value.startsWith("09")) {
-                input.setCustomValidity("Use 09 as number format");
-            } else {
-                input.setCustomValidity("Please enter an 11-digit number");
-            }
-        } else {
-            input.setCustomValidity("");
-        }
+    const regex = /^[0-9]{11}$/;
+    if (!regex.test(input.value)) {
+        input.setCustomValidity("Please enter a 11-digit number");
+    } else {
+        input.setCustomValidity("");
+    }
 }
 
 /*********************LOGIN FORM************************/
 document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault(); 
-    const service_form = document.getElementById("service_form");
 
     const formData = new FormData(this); 
 
@@ -188,26 +144,12 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json()) // Parse the JSON response
+    .then(response => response.json()) 
     .then(data => {
         if (data.success) {
-            isLoggedIn = true;
-             Swal.fire({
-                title: "You have successfully logged in.",
-                icon: "success",
-                timer: 2000,
-                showConfirmButton: false
-            }).then(() => {
-                if (redirectToServiceRequest) {
-                    redirectToServiceRequest = false;
-                    service_form.style.display = "block";
-                } else {
-                     window.location.href = '/laundry_system/dashboard/dashboard.php';
-                }
-               
-            });
+            //redirect on successful login
+            window.location.href = '/laundry_system/dashboard/dashboard.php';
         } else {
-            //error message
             Swal.fire({
                 icon: 'error',
                 title: data.title,
@@ -219,6 +161,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
         console.error('Error:', error);
     });
 });
+
 
 /***************************LAUNDRY SERVICE REQUEST****************************/
 //fetch laundry service
@@ -233,9 +176,7 @@ function fetchServices() {
         .then(data => {
             console.log(data); // Debugging
             let dropdown = document.getElementById('service');
-            dropdown.innerHTML = '<option selected disabled>--Select Service--</option>'; // Clear existing options
-
-            // Populate
+            dropdown.innerHTML = '<option selected>--Select Service--</option>'; // Clear existing options
             data.forEach(service => {
                 let option = document.createElement('option');
                 option.value = service.service_id;
@@ -257,43 +198,20 @@ function fetchCategories() {
             return response.json();
         })
         .then(data => {
-            console.log(data); 
-            populateCategories(data); // Call function to populate categories
+            console.log(data); // Debugging
+            let dropdown = document.getElementById('category');
+            dropdown.innerHTML = '<option selected>--Select Category--</option>'; 
+            data.forEach(category => {
+                let option = document.createElement('option');
+                option.value = category.category_id;
+                option.textContent = category.laundry_category_option;
+                dropdown.appendChild(option);
+            });
         })
         .catch(error => console.error('Error fetching categories:', error));
 }
-
-function populateCategories(data) {
-    let dropdown = document.getElementById('category');
-    let serviceDropdown = document.getElementById('service'); 
-    dropdown.innerHTML = '<option selected disabled>--Select Category--</option>'; 
-
-    if (serviceDropdown.value === "2") {
-        let filteredCategories = data.filter(category => 
-            category.laundry_category_option === 'Clothes/Table Napkins/Pillowcase' || 
-            category.laundry_category_option === 'Bedsheet/Table Cloths/Curtain' 
-        );
-        
-        filteredCategories.forEach(category => {
-            let option = document.createElement('option');
-            option.value = category.category_id;
-            option.textContent = category.laundry_category_option;
-            dropdown.appendChild(option);
-        });
-    } else {
-        data.forEach(category => {
-            let option = document.createElement('option');
-            option.value = category.category_id;
-            option.textContent = category.laundry_category_option;
-            dropdown.appendChild(option);
-        });
-    }
-}
-document.getElementById('service').addEventListener('change', fetchCategories);
-
 //fetch categories when the page loads
 document.addEventListener('DOMContentLoaded', fetchCategories);
-
 
 //fetch price based on the selected laundry service and category
 $('#service, #category').change(function() {
@@ -336,7 +254,7 @@ function fetchServiceOptions() {
         .then(data => {
             console.log(data);
             let dropdown = document.getElementById('service_option');
-            dropdown.innerHTML = '<option selected disabled>--Select Option--</option>'; //clear existing options
+            dropdown.innerHTML = '<option selected>--Select Option--</option>'; //clear existing options
             data.forEach(service_option => {
                 let option = document.createElement('option');
                 option.value = service_option.option_id;
@@ -360,6 +278,43 @@ function updateTotalAmount() {
     var finalTotalAmount = totalPrice + deliveryFee + rushFee;
     $('#total_amount').val(finalTotalAmount.toFixed(2));
 }
+
+//fetch service options price
+$('#service_option').change(function() {
+    const serviceOptionId = $(this).val();
+    const selectedOptionText = $(this).find('option:selected').text();
+  
+    if (selectedOptionText === 'Customer Pick-Up') {
+        $('#delivery_fee').val('');  
+        updateTotalAmount(); 
+    } else if (serviceOptionId) {
+        $.ajax({
+            type: 'GET',
+            url: '/laundry_system/homepage/getServiceOptionRate.php',
+            data: { option_id: serviceOptionId },
+            dataType: 'json'
+        })
+        .done(function(data) {
+            console.log('Received data:', data);
+            if (data.error === 0) {
+                console.log('Setting price to:', data.price);
+                if (selectedOptionText === 'Delivery') {
+                    $('#delivery_fee').val(parseFloat(data.price).toFixed(2));  
+                }
+                updateTotalAmount();  
+            } else {
+                console.log('Error:', data.message);
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log('Ajax error:', error);
+        });
+    } else {
+        $('#delivery_fee').val(''); 
+        updateTotalAmount();
+    }
+});
+
 
 //FETCH RUSH PRICE
 $('#rush').change(function() {
@@ -648,7 +603,6 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     swal.fire("Orders saved successfully!", response.message, "success")
                         .then(() => {
-
                             //Store orders in session storage
                             sessionStorage.setItem('orders', JSON.stringify(orders));
                             
@@ -681,348 +635,139 @@ $(document).ready(function() {
         });
     });
     
-        // $('#btnDone_service').click(function() {
-        //     console.log("btnDone_service clicked");
-            
-        //     var customerId = $('#customer_id_hidden').val();
-        //     var serviceId = $('select[name="service_option"]').val();
-        //     var serviceOption = $('select[name="service_option"] option:selected').text();
-        //     var isRush = $('#rush').is(':checked') ? 'Rush' : 'Standard';
-        //     var province = $('#province').val();
-        //     var city = $('#city').val();
-        //     var address = $('#address').val();
-        //     var brgy = $('#barangaySelect').val();
-        //     var pickupDate = $('#pickup_date').val();
-        //     var deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
-        //     var rushFee = parseFloat($('#rush_fee').val()) || 0;
-        //     var amountTendered = parseFloat($('#amount_tendered').val()) || 0;
-        //     var customerName = $('#customer_name_hidden').val();
-        //     var contactNumber = $('#contact_number_hidden').val();
-            
-        //     let formIsValid = true;
-        //     const serviceType = $("#service_option").val(); //delivery or customer pick-up
-        //     const isDelivery = serviceType === "1";
-            
-        //     if (isDelivery) {
-        //         $("#address, #province, #city, #barangaySelect").each(function() {
-        //             if ($(this).val() === "") {
-        //                 Swal.fire("Oops!", `Please fill in all required delivery fields.`, "error");
-        //                 $(this).focus();
-        //                 formIsValid = false;
-        //                 return false; // Stop checking further fields if one is empty
-        //             }
-        //         });
-        //     }
-
-        //     if (formIsValid) {
-        //         console.log("Validation passed: All required fields are present");
-        //         // Proceed with form submission
-        //     } else {
-        //         // Prevent form submission if fields are missing
-        //         event.preventDefault();
-        //     }
-
-        //     var finalTotalAmount = totalPrice + deliveryFee + (isRush === 'Rush' ? rushFee : 0);
-        //     var change = amountTendered - finalTotalAmount;
+    $('#btnDone_service').click(function() {
+        console.log("btnDone_service clicked");
         
-        //     console.log('finalTotalAmount:', finalTotalAmount);
-        //     console.log('change:', change);
-        //     $('#total_amount').val(finalTotalAmount.toFixed(2));
-        //     $('#change').val(change.toFixed(2));
-        
-        //     if (!serviceOption || !pickupDate || !amountTendered) {
-        //         console.log("Validation failed: Missing serviceOption or pickupDate");
-        //         Swal.fire("Oops!", "Please fill in all the required fields.", "error");
-        //         return;
-        //     } else {
-        //         console.log("Validation passed: serviceOption and pickupDate are present");
-        //     }
-        
-        //     var serviceDetails = {
-        //         customer_id: customerId,
-        //         serviceId: serviceId,
-        //         service_option: serviceOption,
-        //         is_rush: isRush,
-        //         province: province,
-        //         city: city,
-        //         address: address,
-        //         brgy: brgy,
-        //         pickup_date: pickupDate,
-        //         total_amount: finalTotalAmount.toFixed(2),
-        //         delivery_fee: deliveryFee,
-        //         rush_fee: rushFee,
-        //         amount_tendered: amountTendered.toFixed(2),
-        //         change: change.toFixed(2),
-        //         customer_name: customerName,
-        //         contact_number: contactNumber
-        //     };
-        
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: 'saveServiceDetails.php',
-        //         data: serviceDetails,
-        //         dataType: 'json',
-        //         success: function(response) {
-        //             if (response.status === 'success') {
-        //                 Swal.fire({
-        //                     title: "Great! Service details saved successfully.",
-        //                     text: response.message,
-        //                     icon: "success",
-        //                     timer: 2000,
-        //                     showConfirmButton: false
-        //                 }).then(() => {
-        //                     //to set a flag to trigger the other page to refresh
-        //                     localStorage.setItem("refreshOtherPage", "true");
+        var customerId = $('#customer_id_hidden').val();
+        var serviceId = $('select[name="service_option"]').val();
+        var serviceOption = $('select[name="service_option"] option:selected').text();
+        var isRush = $('#rush').is(':checked') ? 'Rush' : 'Standard';
+        var address = $('#address').val();
+        var pickupDate = $('#pickup_date').val();
+        var deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
+        var rushFee = parseFloat($('#rush_fee').val()) || 0;
+        var amountTendered = parseFloat($('#amount_tendered').val()) || 0;
+        var customerName = $('#customer_name_hidden').val();
+        var contactNumber = $('#contact_number_hidden').val();
+    
+        var finalTotalAmount = totalPrice + deliveryFee + (isRush === 'Rush' ? rushFee : 0);
+        var change = amountTendered - finalTotalAmount;
+    
+        console.log('finalTotalAmount:', finalTotalAmount);
+        console.log('change:', change);
+        $('#total_amount').val(finalTotalAmount.toFixed(2));
+        $('#change').val(change.toFixed(2));
+    
+        if (!serviceOption || !pickupDate) {
+            console.log("Validation failed: Missing serviceOption or pickupDate");
+            Swal.fire("Oops!", "Please fill in all the required fields.", "error");
+            return;
+        } else {
+            console.log("Validation passed: serviceOption and pickupDate are present");
+        }
+    
+        var serviceDetails = {
+            customer_id: customerId,
+            serviceId: serviceId,
+            service_option: serviceOption,
+            is_rush: isRush,
+            address: address,
+            pickup_date: pickupDate,
+            total_amount: finalTotalAmount.toFixed(2),
+            delivery_fee: deliveryFee,
+            rush_fee: rushFee,
+            amount_tendered: amountTendered.toFixed(2),
+            change: change.toFixed(2),
+            customer_name: customerName,
+            contact_number: contactNumber
+        };
+    
+        $.ajax({
+            type: 'POST',
+            url: 'saveServiceDetails.php',
+            data: serviceDetails,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                        title: "Great! Service details saved successfully.",
+                        text: response.message,
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        //to set a flag to trigger the other page to refresh
+                        localStorage.setItem("refreshOtherPage", "true");
 
-        //                     resetOrder();
-        //                     $('#form_id')[0].reset();
-        //                     $('#form-service input, #form-service select, #form-service textarea').val('');
-        
-        //                     // Update the invoice with service details
-        //                     $('#invoice_customer_id_hidden').text(serviceDetails.customer_id);
-        //                     $('#invoice_name').text(serviceDetails.customer_name);
-        //                     $('#invoice_date').text(new Date().toLocaleString('en-GB', {
-        //                         year: 'numeric',
-        //                         month: '2-digit',
-        //                         day: '2-digit',
-        //                         hour: '2-digit',
-        //                         minute: '2-digit',
-        //                         second: '2-digit',
-        //                         hour12: false // 24-hour format
-        //                     }));
-        //                     $('#invoice_contact_number').text(serviceDetails.contact_number);
-        //                     $('#invoice_address').text(serviceDetails.address);
-        //                     $('#invoice_service_type').text(serviceDetails.service_option);
-        //                     $('#invoice_pickup_delivery_date').text(serviceDetails.pickup_date);
+                        resetOrder();
+                        $('#form_id')[0].reset();
+                        $('#form-service input, #form-service select, #form-service textarea').val('');
+    
+                        // Update the invoice with service details
+                        $('#invoice_customer_id_hidden').text(serviceDetails.customer_id);
+                        $('#invoice_name').text(serviceDetails.customer_name);
+                        $('#invoice_date').text(new Date().toLocaleString('en-GB', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false // 24-hour format
+                        }));
+                        $('#invoice_contact_number').text(serviceDetails.contact_number);
+                        $('#invoice_address').text(serviceDetails.address);
+                        $('#invoice_service_type').text(serviceDetails.service_option);
+                        $('#invoice_pickup_delivery_date').text(serviceDetails.pickup_date);
 
-        //                     var orders = JSON.parse(sessionStorage.getItem('orders')) || [];
+                        var orders = JSON.parse(sessionStorage.getItem('orders')) || [];
 
-        //                     orders.forEach(order => {
-        //                         var serviceRow = `
-        //                             <tr>
-        //                                 <td>${order.serviceOption}</td>
-        //                                 <td>${order.categoryOption}</td>
-        //                                 <td>${order.quantity}</td>
-        //                                 <td>${order.weight}</td>
-        //                                 <td>${order.price}</td>
-        //                             </tr>
-        //                         `;
-        //                         $('#services-table tbody').append(serviceRow);
-        //                     });
-        
-        //                     if ($('#services-table tbody tr.additional-fees').length === 0) {
-        //                         var additionalFeesRow = `
-        //                             <tr class="additional-fees">
-        //                                 <td colspan="4">Delivery Fee</td>
-        //                                 <td>₱${deliveryFee.toFixed(2)}</td>
-        //                             </tr>
-        //                             ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
-        //                             <tr class="additional-fees">
-        //                                 <td colspan="4"><strong>Total Amount</strong></td>
-        //                                 <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
-        //                             </tr>
-        //                         `;
-        
-        //                         $('#services-table tbody').append(additionalFeesRow);
-        //                     }
-        
-        //                     // Show the invoice container
-        //                     $('#print_invoice').show();
-        //                     $('#print_invoice_btn').show();
-        //                     console.log("Invoice data set and container shown.");
-        //                 });
-        //             } else {
-        //                 Swal.fire("Service details not saved!", response.message, "error");
-        //             }
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error("Save Service Details Error: " + error);
-        //             Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
-        //         }
-        //     });
-        // })
-
-// Delivery validation 
-$(document).ready(function() {
-    // Address fields are still visible regardless of the service option
-    $("#address, #province, #city, #barangaySelect").closest('div').show();
-});
-
-// change event
-$("#service_option").change(function() {
-    const serviceType = $("#service_option").val();
-    const isDelivery = serviceType === "1"; // "1" represents Delivery
-
-    if (isDelivery) {
-        // required for delivery
-        $("#address, #province, #city, #barangaySelect").prop('required', true);
-    } else {
-        // for pick-up fields are still visible
-        $("#address, #province, #city, #barangaySelect").prop('required', false);
-    }
-});
-
-// Submit button click event
-$("#btnDone_service").click(function(event) {
-    console.log("btnDone_service clicked");
-
-    var customerId = $('#customer_id_hidden').val();
-    var serviceId = $('select[name="service_option"]').val();
-    var serviceOption = $('select[name="service_option"] option:selected').text();
-    var isRush = $('#rush').is(':checked') ? 'Rush' : 'Standard';
-    var province = $('#province').val();
-    var city = $('#city').val();
-    var address = $('#address').val();
-    var brgy = $('#barangaySelect').val();
-    var pickupDate = $('#pickup_date').val();
-    var deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
-    var rushFee = parseFloat($('#rush_fee').val()) || 0;
-    var amountTendered = parseFloat($('#amount_tendered').val()) || 0;
-    var customerName = $('#customer_name_hidden').val();
-    var contactNumber = $('#contact_number_hidden').val();
-
-    let formIsValid = true;
-    const serviceType = $("#service_option").val(); // Delivery or Customer Pick-Up
-    const isDelivery = serviceType === "1";
-
-    // Delivery fields validation
-    if (isDelivery) {
-        // Check each delivery field
-        $("#address, #province, #city, #barangaySelect").each(function() {
-            if ($(this).val() === "") {
-                Swal.fire("Oops!", "Please fill in all required delivery fields: Address, Province, City, and Barangay.", "error");
-                $(this).focus();
-                formIsValid = false;
-                return false; 
+                        orders.forEach(order => {
+                            var serviceRow = `
+                                <tr>
+                                    <td>${order.serviceOption}</td>
+                                    <td>${order.categoryOption}</td>
+                                    <td>${order.quantity}</td>
+                                    <td>${order.weight}</td>
+                                    <td>${order.price}</td>
+                                </tr>
+                            `;
+                            $('#services-table tbody').append(serviceRow);
+                        });
+    
+                        if ($('#services-table tbody tr.additional-fees').length === 0) {
+                            var additionalFeesRow = `
+                                <tr class="additional-fees">
+                                    <td colspan="4">Delivery Fee</td>
+                                    <td>₱${deliveryFee.toFixed(2)}</td>
+                                </tr>
+                                ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
+                                <tr class="additional-fees">
+                                    <td colspan="4"><strong>Total Amount</strong></td>
+                                    <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
+                                </tr>
+                            `;
+    
+                            $('#services-table tbody').append(additionalFeesRow);
+                        }
+    
+                        // Show the invoice container
+                        $('#print_invoice').show();
+                        $('#print_invoice_btn').show();
+                        console.log("Invoice data set and container shown.");
+                    });
+                } else {
+                    Swal.fire("Service details not saved!", response.message, "error");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Save Service Details Error: " + error);
+                Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
             }
         });
-    }
+    })
 
-    if (!formIsValid) {
-        event.preventDefault(); 
-        return;
-    }
-
-    // proceed with final total amount and change calculation
-    var finalTotalAmount = totalPrice + deliveryFee + (isRush === 'Rush' ? rushFee : 0);
-    var change = amountTendered - finalTotalAmount;
-
-    console.log('finalTotalAmount:', finalTotalAmount);
-    console.log('change:', change);
-    $('#total_amount').val(finalTotalAmount.toFixed(2));
-    $('#change').val(change.toFixed(2));
-
-    // additional field validation
-    if (!serviceOption || !pickupDate || !amountTendered) {
-        console.log("Validation failed: Missing serviceOption, pickupDate, or amountTendered");
-        Swal.fire("Oops!", "Please fill in all the required fields.", "error");
-        return;
-    } else {
-        console.log("Validation passed: All fields are present");
-    }
-
-    var serviceDetails = {
-        customer_id: customerId,
-        serviceId: serviceId,
-        service_option: serviceOption,
-        is_rush: isRush,
-        province: province,
-        city: city,
-        address: address,
-        brgy: brgy,
-        pickup_date: pickupDate,
-        total_amount: finalTotalAmount.toFixed(2),
-        delivery_fee: deliveryFee,
-        rush_fee: rushFee,
-        amount_tendered: amountTendered.toFixed(2),
-        change: change.toFixed(2),
-        customer_name: customerName,
-        contact_number: contactNumber
-    };
-
-    $.ajax({
-        type: 'POST',
-        url: 'saveServiceDetails.php',
-        data: serviceDetails,
-        dataType: 'json',
-        success: function(response) {
-            if (response.status === 'success') {
-                Swal.fire({
-                    title: "Great! Service details saved successfully.",
-                    text: response.message,
-                    icon: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    localStorage.setItem("refreshOtherPage", "true");
-
-                    resetOrder();
-                    $('#form_id')[0].reset();
-                    $('#form-service input, #form-service select, #form-service textarea').val('');
-
-                    $('#invoice_customer_id_hidden').text(serviceDetails.customer_id);
-                    $('#invoice_name').text(serviceDetails.customer_name);
-                    $('#invoice_date').text(new Date().toLocaleString('en-GB', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false
-                    }));
-                    $('#invoice_contact_number').text(serviceDetails.contact_number);
-                    $('#invoice_address').text(serviceDetails.address);
-                    $('#invoice_service_type').text(serviceDetails.service_option);
-                    $('#invoice_pickup_delivery_date').text(serviceDetails.pickup_date);
-
-                    var orders = JSON.parse(sessionStorage.getItem('orders')) || [];
-
-                    orders.forEach(order => {
-                        var serviceRow = `
-                            <tr>
-                                <td>${order.serviceOption}</td>
-                                <td>${order.categoryOption}</td>
-                                <td>${order.quantity}</td>
-                                <td>${order.weight}</td>
-                                <td>${order.price}</td>
-                            </tr>
-                        `;
-                        $('#services-table tbody').append(serviceRow);
-                    });
-
-                    if ($('#services-table tbody tr.additional-fees').length === 0) {
-                        var additionalFeesRow = `
-                            <tr class="additional-fees">
-                                <td colspan="4">Delivery Fee</td>
-                                <td>₱${deliveryFee.toFixed(2)}</td>
-                            </tr>
-                            ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
-                            <tr class="additional-fees">
-                                <td colspan="4"><strong>Total Amount</strong></td>
-                                <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
-                            </tr>
-                        `;
-
-                        $('#services-table tbody').append(additionalFeesRow);
-                    }
-
-                    $('#print_invoice').show();
-                    $('#print_invoice_btn').show();
-                    console.log("Invoice data set and container shown.");
-                });
-            } else {
-                Swal.fire("Service details not saved!", response.message, "error");
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Save Service Details Error: " + error);
-            Swal.fire("Service details not saved!", "An error occurred while saving the service details. Please try again.", "error");
-        }
-    });
-});
-
-    /*function printInvoice() {
+    function printInvoice() {
         var printButton = document.getElementById('print_invoice_btn');
         printButton.style.display = 'none';
         
@@ -1094,8 +839,9 @@ $("#btnDone_service").click(function(event) {
         $('#print_invoice').hide();
         $('#service_details').hide();
     }
-
-    $('#print_invoice_btn').click(printInvoice); */
+    
+    
+    $('#print_invoice_btn').click(printInvoice);
     
     $('#btnCancel_service_details').click(function() {
         swal.fire({
@@ -1146,7 +892,7 @@ $("#btnDone_service").click(function(event) {
                 });
             }
         });
-    }); 
+    });
 
     //Cancel service request button click on overview page
     $('#btnCancel_service').click(function() {
@@ -1304,64 +1050,20 @@ $("#btnDone_service").click(function(event) {
         });
     }
 
-    // Barangay names
-    const brgys = [
-        "Ciudad Real", "Dulong Bayan", "Francisco Homes - Guijo", "Francisco Homes - Mulawin", "Francisco Homes - Narra", 
-        "Francisco Homes - Yakal", "Gaya-gaya", "Graceville", "Gumaoc East", "Gumaoc Central", "Gumaoc West", "Kaybanban", 
-        "Kaypian", "Maharlika", "Muzon South", "Muzon Proper", "Muzon East", "Muzon West", "Paradise 3", "Poblacion", 
-        "Poblacion 1", "San Isidro", "San Manuel", "San Roque", "Sto. Cristo", "Tungkong Mangga"
-    ];
+    // Array of Barangay names
+    const brgys = ["Ciudad Real", "Dulong Bayan", "Francisco Homes - Guijo", "Francisco Homes - Mulawin", "Francisco Homes - Narra", "Francisco Homes - Yakal",
+        "Gaya-gaya", "Graceville", "Gumaoc East", "Gumaoc Central", "Gumaoc West", "Kaybanban", "Kaypian", "Maharlika", "Muzon South", "Muzon Proper", "Muzon East", 
+        "Muzon West", "Paradise 3", "Poblacion", "Poblacion 1", "San Isidro", "San Manuel", "San Roque", "Sto. Cristo", "Tungkong Mangga"];
 
-    const barangaySelect = document.getElementById("barangaySelect");
-    
-    //barangay options
+    // select the element by ID
+    const barangaySelect = document.getElementById("baranggay");
+
+    // Populate the selected elements
     brgys.forEach(brgy => {
         const option = document.createElement("option");
         option.value = brgy;
         option.textContent = brgy;
         barangaySelect.appendChild(option);
-    });
 
-    //fetch service options price and brgy price based on the selected brgy
-    $('#service_option').change(function() {
-        const serviceOptionId = $(this).val();
-        const selectedOptionText = $(this).find('option:selected').text();
-        const selectedBarangay = barangaySelect.value;
-        
-        if (selectedOptionText === 'Customer Pick-Up') {
-            $('#delivery_fee').val('');
-            updateTotalAmount();
-        } else if (serviceOptionId) {
-            const d_categoryID = (selectedBarangay === "Gaya-gaya") ? 2 : 1; //ID for "Gaya-gaya" : other barangay
-
-            $.ajax({
-                type: 'GET',
-                url: '/laundry_system/homepage/getServiceOptionRate.php',
-                data: { option_id: serviceOptionId, d_categoryID: d_categoryID },
-                dataType: 'json'
-            })
-            .done(function(data) {
-                console.log('Received data:', data);
-                if (data.error === 0) {
-                    console.log('Setting price to:', data.price);
-                    if (selectedOptionText === 'Delivery') {
-                        $('#delivery_fee').val(parseFloat(data.price).toFixed(2));
-                    }
-                    updateTotalAmount(); 
-                } else {
-                    console.log('Error:', data.message);
-                }
-            })
-            .fail(function(xhr, status, error) {
-                console.log('Ajax error:', error);
-            });
-        } else {
-            $('#delivery_fee').val('');
-            updateTotalAmount();
-        }
-    });
-
-    barangaySelect.addEventListener('change', function() {
-        $('#service_option').trigger('change'); // to trigger the service option change
     });
 });

@@ -25,7 +25,6 @@ $defaultDeliveryDay = date('Y-m-d', strtotime("+" . ($isRush ? $rushDeliveryDays
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -164,25 +163,25 @@ $conn->close();
                             <span class="info-icon" data-tooltip="Provide first and last name">i</span>
                         </label>
                         <input type="text" class="form-control" id="customer_name" name="customer_name"
-                            placeholder="Enter customer name" autocomplete="off" required>
+                            placeholder="Enter customer name" autocomplete="off">
                     </div>
 
-                    <div class="col">
+                   <div class="col">
                         <label for="contactNo" class="form-label">
                             <b>Contact Number</b>
-                            <span class="info-icon" data-tooltip="Please use active phone number">i</span>
+                            <span class="info-icon" data-tooltip="Please use active mobile number">i</span>
                         </label>
                         <input type="tel" class="form-control" id="contact_number" name="contact_number"
-                            placeholder="Enter contact number" autocomplete="off"  maxlength="11" oninput="validateContactNumber(this)" required>
-                    </div>
+                            placeholder="Enter contact number" autocomplete="off"  maxlength="11" oninput="validateContactNumber(this)">
+                    </div> 
                 </div>
 
                 <div class="row">
                     <h5 class="text-center">Laundry Information</h5>
                     <div class="col">
                         <label for="qty" class="form-label"><b>Quantity of laundry bags</b></label>
-                        <select name="quantity" class="form-select" required>
-                            <option selected disabled>--Select Quantity--</option>
+                        <select name="quantity" class="form-control">
+                            <option selected>--Select Quantity--</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -200,14 +199,14 @@ $conn->close();
                 <div class="row">
                     <div class="col">
                         <label for="service" class="form-label"><b>Laundry Service</b></label>
-                        <select name="service" class="form-select" id="service" required>
+                        <select name="service" class="form-control" id="service">
                             <option selected disabled>--Select Service--</option>
                         </select>
                     </div>
 
                     <div class="col">
                         <label for="category" class="form-label"><b>Laundry Category</b></label>
-                        <select name="category" class="form-select" id="category" required>
+                        <select name="category" class="form-control" id="category">
                             <option selected disabled>--Select Category--</option>
                         </select>
                     </div>
@@ -223,7 +222,7 @@ $conn->close();
                 <div class="row">
                     <div class="col">
                         <label for="price" class="form-label"><b>Price</b></label>
-                        <input type="number" class="form-control" id="price" name="price" autocomplete="off" readonly required>
+                        <input type="number" class="form-control" id="price" name="price" autocomplete="off" readonly>
                     </div>
                 </div>
 
@@ -309,8 +308,8 @@ $conn->close();
                         <h5 class="text-center">Service Details</h5>
                         <div class="col">
                             <label for="service_option" class="form-label"><b>Service Option</b></label>
-                            <select name="service_option" class="form-select" id="service_option" required>
-                                <option selected>--Select Option--</option>
+                            <select name="service_option" class="form-control" id="service_option">
+                                <option selected disabled>--Select Option--</option>
                             </select>
                         </div>
                     </div>
@@ -324,7 +323,7 @@ $conn->close();
                             </div>
                         </div>
                     </div>
-
+                
                     <div class="row">
                         <div class="col">
                             <label for="address" class="form-label"><b>Address</b></label>
@@ -338,23 +337,23 @@ $conn->close();
 
                     <div class="row">
                         <div class="col">
-                            <select class="form-select" aria-label="province" name="province" id="province">
+                            <select class="form-select" aria-label="province" name="province">
                                 <option selected disabled>Province</option>
                                 <option value="bulacan">Bulacan</option>
                             </select>
                         </div>
 
                         <div class="col">
-                            <select class="form-select" aria-label="city" name="city" id="city">
+                            <select class="form-select" aria-label="city" name="city">
                                 <option selected disabled>City</option>
-                                <option value="sjdm">San Jose del Monte</option>
+                                <option value="San Jose del Monte">San Jose del Monte</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col">
-                            <select class="form-select" aria-label="brgy" name="brgy" id="barangaySelect" required>
+                            <select class="form-select" aria-label="brgy" name="brgy" id="baranggay">
                                 <option selected disabled>Barangay</option>
                             </select>
                         </div>
@@ -369,6 +368,7 @@ $conn->close();
 
                     <div class="row">
                         <h5 class="text-center">Charges</h5>
+                        
                         <div class="col">
                             <label for="delivery_fee" class="form-label"><b>Delivery Fee</b></label>
                             <input type="number" class="form-control" id="delivery_fee" name="delivery_fee"
@@ -377,7 +377,8 @@ $conn->close();
                         
                         <div class="col">
                             <label for="rush_fee" class="form-label"><b>Rush Fee</b></label>
-                            <input type="number" class="form-control" id="rush_fee" name="rush_fee" autocomplete="off" readonly>
+                            <input type="number" class="form-control" id="rush_fee" name="rush_fee"
+                            autocomplete="off" readonly>
                         </div>
                     </div>
 
@@ -622,7 +623,6 @@ $conn->close();
             const formattedDate = newDate.toISOString().split('T')[0];
             pickupDateInput.value = formattedDate;
         });
-        
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
