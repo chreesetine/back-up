@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //if the password is provided, validate and update it
     if ($currentPass && $newPass) {
         // the current password hash from the database
-        $stmt = $mysqli->prepare("SELECT password FROM users WHERE user_id = ?");
+        $stmt = $mysqli->prepare("SELECT password FROM user WHERE user_id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $stmt->bind_result($storedPasswordHash);

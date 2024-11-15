@@ -7,34 +7,30 @@ if(!isset($_SESSION['user_role'])) {
     header('location: /laundry_system/homepage/homepage.php');
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="profile.css">
+    <title>My Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="profile.css">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
 </head>
-
 <body>
     <div class="progress"></div>
     <div class="wrapper">
-        <aside id="sidebar">
+    <aside id="sidebar">
             <div class="d-flex">
                 <button id="toggle-btn" type="button">
                     <i class="bx bx-menu-alt-left"></i>
                 </button>
 
                 <div class="sidebar-logo">
-                    <a href="/laundry_system/dashboard/dashboard.php">Azia Skye</a>
+                    <a href="#">Azia Skye</a>
                 </div>
             </div>
 
@@ -44,14 +40,14 @@ if(!isset($_SESSION['user_role'])) {
                         <i class="lni lni-grid-alt"></i>
                         <span>Dashboard</span>
                     </a>
-              </li>
+                </li>
 
-            <li class="sidebar-item">
-                <a href="/laundry_system/profile/profile.php" class="sidebar-link">
-                    <i class="lni lni-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
+                <li class="sidebar-item">
+                    <a href="/laundry_system/profile/profile.php" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
 
                 <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
@@ -62,7 +58,7 @@ if(!isset($_SESSION['user_role'])) {
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                        <a href="/laundry_system/records/records.php" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
                             data-bs-target="#records" aria-expanded="false" aria-controls="records">
                             <i class="lni lni-files"></i>
                             <span>Records</span>
@@ -98,7 +94,7 @@ if(!isset($_SESSION['user_role'])) {
                     </a>
                 </li>
 
-                <?php if ($user_role === 'admin') : ?>
+                    <?php if ($user_role === 'admin') : ?>
                     <li class="sidebar-item">
                         <a href="/laundry_system/settings/setting.php" class="sidebar-link">
                             <i class="lni lni-cog"></i>
@@ -134,18 +130,19 @@ if(!isset($_SESSION['user_role'])) {
                         </ul>
                     </li>
                 <?php endif; ?>
+
             </ul>
 
             <div class="sidebar-footer">
-                <a href="javascript:void(0)" class="sidebar-link" id="btn_logout">
+                <a href="#" id="btn_logout" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!---------MAIN CONTENT------------->
-        <div class="main-content">
+            <!---------MAIN CONTENT------------->
+            <div class="main-content">
                 <nav>
                     <div class="d-flex justify-content-between align-items-center">
                         <h1>Profile</h1>
@@ -160,13 +157,11 @@ if(!isset($_SESSION['user_role'])) {
                                 <label for="form-label">First Name</label>
                                 <input type="text" id="fname" name="fname" class="form-control" readonly>
                             </div>
-
                             <div class="col">
                                 <label for="form-label">Last Name</label>
                                 <input type="text" name="lname" id="lname" class="form-control" readonly>
                             </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col">
                                 <label for="form-label">Username</label>
@@ -248,7 +243,7 @@ if(!isset($_SESSION['user_role'])) {
                             </div>
                         </div>
                         
-                        <div class="text-center">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="button" class="btn btn-outline-secondary" id="btnBack">Back</button>
                             <button type="button" class="btn btn-primary" id="btnSaveChanges">Save Changes</button>
                         </div>
@@ -258,7 +253,7 @@ if(!isset($_SESSION['user_role'])) {
             <div id="logoutModal" class="modal" style="display:none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
                         <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
                         <button class="btn btn-no">No</button>
