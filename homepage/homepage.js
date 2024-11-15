@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     openBtn.addEventListener('click', () => {
-        // Check if the user is logged in
         if (isLoggedIn) {
             // Directly show the service request form
             service_form.style.display = "block";
@@ -123,17 +122,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 showConfirmButton: false,
                 timer: 3000,
             }).then(() => {
-                Swal.fire({
-                    title: "Please log in to access the service request.",
-                    showConfirmButton: true,
-                    icon: "warning"
-                }).then((choice) => {
-                    if (choice.isConfirmed) {
                         redirectToServiceRequest = true;
                         login_form.style.display = "block";
                         service_form.style.display = 'none';
-                    }
-                });
             });
         }
     });
@@ -995,12 +986,12 @@ $("#btnDone_service").click(function(event) {
                         var additionalFeesRow = `
                             <tr class="additional-fees">
                                 <td colspan="4">Delivery Fee</td>
-                                <td>₱${deliveryFee.toFixed(2)}</td>
+                                <td>P${deliveryFee.toFixed(2)}</td>
                             </tr>
-                            ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>₱${rushFee.toFixed(2)}</td></tr>` : ''}
+                            ${isRush === 'Rush' ? `<tr class="additional-fees"><td colspan="4">Rush Fee</td><td>P${rushFee.toFixed(2)}</td></tr>` : ''}
                             <tr class="additional-fees">
                                 <td colspan="4"><strong>Total Amount</strong></td>
-                                <td><strong>₱${finalTotalAmount.toFixed(2)}</strong></td>
+                                <td><strong>P${finalTotalAmount.toFixed(2)}</strong></td>
                             </tr>
                         `;
 

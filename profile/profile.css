@@ -57,15 +57,14 @@ height: 100vh;
 
 #sidebar {
 display: flex;
-height: 100%;
 width: 70px;
-overflow: auto;
 min-width: 70px;
 z-index: 1000;
 transition: all 0.25s ease-in-out;
 flex-direction: column;
 background-color: #0e223e;
 border-radius: 0 20px 20px 0;
+overflow: auto;
 }
 
 #sidebar.expand {
@@ -188,8 +187,8 @@ transition: margin-left 0.5s ease;
     background: #fff;
     padding: 20px;
     width: 45%;
-    border-radius: 28px;
-    border-color: #232946;
+    border-radius: 24px;
+    border: 1px solid #ccc;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
@@ -227,7 +226,7 @@ transition: margin-left 0.5s ease;
     top: 0;
     width: 100%;
     height: 100%;
-    padding-top: 5px;
+    padding: 5px 0 ;
 }
 
 .edit_user .edit_user_form{
@@ -235,8 +234,8 @@ transition: margin-left 0.5s ease;
     background: #fff;
     padding: 20px;
     width: 50%;
-    border-radius: 28px;
-    border-color: #232946;
+    border-radius: 24px;
+    border: 1px solid #ccc;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
@@ -306,7 +305,7 @@ transition: margin-left 0.5s ease;
     .user_container .user_form, .edit_user .edit_user_form {
       width: 100%;
     }
-}
+  }
 
 /* logout */
 #logoutModal {
@@ -322,11 +321,16 @@ transition: margin-left 0.5s ease;
   align-items: center;
 }
 
+#logoutModal.show {
+  display: flex; 
+}
+
 .modal-cont {
   position: relative;
   padding: 20px;
   background-color: white;
-  width: 35%;
+  width: 50%;
+  max-width: 500px; 
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
@@ -334,20 +338,10 @@ transition: margin-left 0.5s ease;
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .modal-buttons .btn {
-  padding: 10px 20px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  flex-grow: 1;
-  margin: 0 10px;
-}
-
-.btn {
   padding: 10px 20px;
   border-radius: 4px;
   border: none;
@@ -373,5 +367,36 @@ transition: margin-left 0.5s ease;
   right: 15px;
   font-size: 24px;
   cursor: pointer;
+} 
+
+@media (max-width: 768px) {
+  .modal-cont {
+    width: 70%;
+    padding: 15px;
+  }
+
+  .modal-buttons .btn {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
 }
-  
+
+@media (max-width: 480px) {
+  .modal-cont {
+    width: 90%;
+    padding: 10px;
+  }
+
+  #logoutText {
+    font-size: 20px;
+  }
+
+  .close {
+    font-size: 20px;
+    top: 5px;
+  }
+
+  .modal-buttons .btn {
+    padding: 10px;
+  }
+}
