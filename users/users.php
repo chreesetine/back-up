@@ -2,6 +2,7 @@
 session_start();
 require_once('users_db.php');
 
+$user_role = $_SESSION['user_role'];
 // check if user is logged in
 if (!isset($_SESSION['user_role'])) {
     header('location: /laundry_system/homepage/homepage.php');
@@ -13,7 +14,7 @@ if ($_SESSION['user_role'] !== 'admin') {
     header('location: /laundry_system/homepage/homepage.php');
     exit();
 } 
-$user_role = $_SESSION['user_role'];
+
 ?>
 
 <!DOCTYPE html>
@@ -215,15 +216,15 @@ $user_role = $_SESSION['user_role'];
                                     $updateStatusStmt->close();
                                 }
                         ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($row['user_id']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['username']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['first_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['last_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['user_role']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['last_active']); ?></td>
-                                    <td><?php echo htmlspecialchars($user_status); ?></td> <!-- Display updated status -->
-                                    <td><?php echo htmlspecialchars($row['date_created']); ?></td>
+                                <tr data-id="<?php echo htmlspecialchars($row['user_id']); ?>">
+                                    <td class="user-id"><?php echo htmlspecialchars($row['user_id']); ?></td>
+                                    <td class="username"><?php echo htmlspecialchars($row['username']); ?></td>
+                                    <td class="first-name"><?php echo htmlspecialchars($row['first_name']); ?></td>
+                                    <td class="last-name"><?php echo htmlspecialchars($row['last_name']); ?></td>
+                                    <td class="user-role"><?php echo htmlspecialchars($row['user_role']); ?></td>
+                                    <td class="last-active"><?php echo htmlspecialchars($row['last_active']); ?></td>
+                                    <td class="user-status"><?php echo htmlspecialchars($user_status); ?></td> <!-- Display updated status -->
+                                    <td class="date-created"><?php echo htmlspecialchars($row['date_created']); ?></td>
                                     <td>
                                         <a href="javascript:void(0);" class="edit-btn" 
                                            data-id="<?php echo htmlspecialchars($row['user_id']); ?>" 
@@ -384,17 +385,17 @@ $user_role = $_SESSION['user_role'];
             </div> <!--closing tag for the edit modal structure-->
 
             <!-- for Archive --> 
-            <div class="Archvmodal" id="archiveModal">
+            <div class="Archvmodal" id="archiveModal" style="display: none;">
                 <div class="modal-cnt">
                     <span class="close" id="closeArchiveModal">&times;</span>
+                    <input type="hidden" id="archiveUserId">
                     <p>Do you want to archive this user?</p>
                     <button type="button" id="confirmArchiveButton" class="btn btn-success">Yes</button>
-                   <!-- <button id="cancelArchiveButton" class="btn btn-danger">No</button> -->
                     <button type="button" id="cancelArchiveButton" class="btn btn-danger">No</button>
                 </div>
             </div>
 
-            <div class="Archvmodal" id="successModal">
+            <div class="Archvmodal" id="successModal" style="display: none;">
                 <div class="modal-cnt">
                     <span class="close" id="closeSuccessModal">&times;</span>
                     <p>You have successfully archived this user's details.</p>
@@ -405,10 +406,10 @@ $user_role = $_SESSION['user_role'];
             <div id="logoutModal" class="modal" style="display: none;">
                 <div class="modal-cont">
                     <span class="close">&times;</span>
-                    <h2>Do you want to logout?</h2>
+                    <h2 id="logoutText">Do you want to logout?</h2>
                     <div class="modal-buttons">
-                        <a href="/laundry_system/homepage/logout.php" class="btns btn-yes">Yes</a>
-                        <button class="btns btn-no">No</button>
+                        <a href="/laundry_system/homepage/logout.php" class="btn btn-yes">Yes</a>
+                        <button class="btn btn-no">No</button>
                     </div>
                 </div>
             </div>
